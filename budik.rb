@@ -5,14 +5,15 @@ require 'commander/import'
 require 'json'
 require 'uri'
 require './config.rb'
-require './sources.rb'
+require './devices.rb'
 require './rng.rb'
+require './sources.rb'
+#require './alarm.rb'
 
 program :name, 'Budík.rb'
 program :version, '0.0.1'
 program :description, 'Alarm clock which randomly plays a song or a video from YouTube or your local collection.'
 
-# TODO: parse_category_mods -> others
 global_option('-c', '--categories [array]', 'Limit selection by categories. Example usage: "cat1-subcat1 cat2-subcat1-subsubcat1 etc."') {}
 global_option('-n', '--number [integer]', 'Specify fixed number of source to select.') {}
 global_option('-o', '--options [string]', 'Specify custom path to your options.json file (default: "./options.json").') {}
@@ -34,7 +35,31 @@ command :download do |c|
   c.description = 'Pre-download all remote sources or a specified remote source.'
   c.option '--number [integer]', Integer, 'Specify fixed number of source to select'
   c.action do |args, opts|
-      download_sources(opts.number ? opts.number : :all)
+        options = JSON.parse(File.read(opts.options ? opts.options : "./options.json"))
+
+        if options["sources"]["download"]["method"] == "remove"
+            puts "WARNING: Download method in your options.json is set to \"remove\", downloaded source(s) will be deleted after use. Do you want to change download method to \"save\"? (y/n): "
+            change = gets.chomp
+
+            while true do
+                case change
+                when "y"
+                    options["sources"]["download"]["method"] = "save"
+                    sources = opts.sources ? opts.sources : options["sources"]["path"]
+                    File.open(sources, "w") do |f|
+                        f.write(JSON.pretty_generate(options))
+                    end
+                    break
+                when "n"
+                    break
+                else
+                    puts "Invalid choice. Use \"y\" or \"n\"."
+                    next
+                end
+            end
+        end
+
+        opts.number ? Sources::prepare_source(Sources::get_source_by_number(opts.number), options) : Sources::prepare_all(options)
   end
 end
 
@@ -49,10 +74,19 @@ command :run do |c|
     c.option '--sources [string]', String, 'Specify custom path to your sources.json file (default: "./sources.json").'
     c.action do |args, opts|
         options = JSON.parse(File.read(opts.options ? opts.options : "./options.json"))
-        sources = Sources::prepare_sources(opts.sources ? opts.sources : options["sources"]["path"], opts.categories ? parse_category_mods(opts.categories) : nil)
-        number = opts.number ? opts.number : rng(options["rng"], sources.length, opts.rng ? opts.rng : nil)
+        Sources::load_sources(opts.sources ? opts.sources : options["sources"]["path"], opts.categories ? parse_category_mods(opts.categories) : nil)
+        number = opts.number ? opts.number : rng(options["rng"], Sources::sources_count , opts.rng ? opts.rng : nil)
+        Devices::storage_get(options["sources"]["download"])
+        Devices::storage_mount
+        source = Sources::prepare_source(Sources::get_source_by_number(number), options)
+        Player::get(options["player"])
+        Player::play(source)
+        Devices::storage_unmount
+        Devices::storage_sleep
     end
 end
+
+# TODO: command :set
 
 default_command :run
 
