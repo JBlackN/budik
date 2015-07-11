@@ -14,7 +14,7 @@ class Sources
         return @@sources
     end
 
-    def parse_category_mods(mod_string)
+    def self.parse_category_mods(mod_string)
         parsed_mods = Hash.new
         parsed_mods[:adds] = []
         parsed_mods[:rms] = []
@@ -130,6 +130,7 @@ class Sources
                 download(item, dir)
                 dir = dir[-1, 1] == "/" || dir[-1, 1] == "\\" ? dir : dir + "/"
                 item["path"] = dir + item["path"] + ".mp4"
+                item["remote"] = true
             end
         end
         source
@@ -138,7 +139,18 @@ class Sources
     def self.download(item, dir)
         filename = item["path"] + ".mp4"
         unless File.file?(filename)
-            system("cd " + dir + " && youtube-dl --id -f bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4 " + item["path"] + " && cd $OLDPWD")
+            system("youtube-dl -o " + dir + "%(id)s.%(ext)s -f bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4 " + item["path"])
+        end
+    end
+
+    def self.delete(source, os)
+        source.each do |item|
+            case os
+            when "windows"
+                system("del /Q \"" + item["path"] + "\"") if item["remote"]
+            else
+                system("rm " + item["path"]) if item["remote"]
+            end
         end
     end
 end

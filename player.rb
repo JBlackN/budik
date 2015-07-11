@@ -1,4 +1,5 @@
 require 'open3'
+require 'socket'
 
 class Player
     @@player = "omxplayer"
@@ -28,7 +29,7 @@ class Player
 
     def self.omxplayer(source)
         source.each do |item|
-            cmd = 'omxplayer --vol ' + player_options["defaultVolume"].to_s + ' ' + item["path"]
+            cmd = @@player_options["path"] + ' --vol ' + @@player_options["defaultVolume"].to_s + ' ' + item["path"]
             Open3.popen3(cmd) do |i, o, e, t|
                 (1..7).each do |c|
                     sleep(@@player_options["volumeStepSecs"])
@@ -40,5 +41,29 @@ class Player
     end
 
     def self.vlc(source)
+        cmd = '"' + @@player_options["path"] + '" --extraintf rc --rc-host ' + @@player_options["rcHost"] + ':' + @@player_options["rcPort"].to_s + ' --volume-step ' + @@player_options["volumeStep"].to_s + (@@player_options["fullscreen"] ? ' --fullscreen ' : ' ')
+        source.each do |item|
+            cmd += ('"file:///' + item["path"] + '" ')
+        end
+        cmd += 'vlc://quit'
+        vlc_pid = spawn(cmd)
+        sleep(@@player_options["waitSecsAfterVlcRuns"])
+
+        while true do
+            begin
+                rc = TCPSocket.open(@@player_options["rcHost"], @@player_options["rcPort"])
+                break
+            rescue
+                next
+            end
+        end
+
+        rc.puts "volume " + @@player_options["defaultVolume"].to_s
+        (1..128).each do |i|
+            sleep(@@player_options["volumeFadeInSecs"])
+            rc.puts "volup " + @@player_options["volumeStep"].to_s
+        end
+
+        Process.wait(vlc_pid)
     end
 end

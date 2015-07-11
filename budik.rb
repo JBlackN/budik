@@ -6,9 +6,9 @@ require 'json'
 require 'uri'
 require './config.rb'
 require './devices.rb'
+require './player.rb'
 require './rng.rb'
 require './sources.rb'
-#require './alarm.rb'
 
 program :name, 'Budík.rb'
 program :version, '0.0.1'
@@ -88,11 +88,17 @@ def command_run(args, opts)
         options = JSON.parse(File.read(opts.options ? opts.options : "./options.json"))
         Sources::load_sources(opts.sources ? opts.sources : options["sources"]["path"], opts.categories ? Sources::parse_category_mods(opts.categories) : nil)
         number = opts.number ? opts.number : rng(options["rng"], Sources::sources_count , opts.rng ? opts.rng : nil)
-        Devices::storage_get(options["sources"]["download"])
-        Devices::storage_mount
+
+        unless options["os"] == "windows"
+            Devices::storage_get(options["sources"]["download"])
+            Devices::storage_mount
+        end
         source = Sources::prepare_source(Sources::get_source_by_number(number), options)
         Player::get(options["player"])
         Player::play(source)
-        Devices::storage_unmount
-        Devices::storage_sleep
+        Sources::delete(source, options["os"]) if options["sources"]["download"]["method"] == "remove"
+        unless options["os"] == "windows"
+            Devices::storage_unmount
+            Devices::storage_sleep
+        end
 end
