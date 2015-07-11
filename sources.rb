@@ -14,6 +14,24 @@ class Sources
         return @@sources
     end
 
+    def parse_category_mods(mod_string)
+        parsed_mods = Hash.new
+        parsed_mods[:adds] = []
+        parsed_mods[:rms] = []
+
+        mods = mod_string.split(" ")
+        mods.each do |m|
+            mod = m.split(".")
+            unless mod.first == ""
+                parsed_mods[:adds] << mod
+            else
+                mod.shift
+                parsed_mods[:rms] << mod
+            end
+        end
+        parsed_mods
+    end
+
     def self.parse_categories(categories, rm = false)
         categories.each do |category, subcategory|
             if (subcategory.is_a? Hash)

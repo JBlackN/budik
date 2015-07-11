@@ -25,7 +25,7 @@ command :config do |c|
     c.summary = 'Edit program configuration.'
     c.description = 'Interactive way to edit your config.json file.'
     c.action do |args, options|
-        config
+        config # TODO: command_config
     end
 end
 
@@ -35,31 +35,7 @@ command :download do |c|
   c.description = 'Pre-download all remote sources or a specified remote source.'
   c.option '--number [integer]', Integer, 'Specify fixed number of source to select'
   c.action do |args, opts|
-        options = JSON.parse(File.read(opts.options ? opts.options : "./options.json"))
-
-        if options["sources"]["download"]["method"] == "remove"
-            puts "WARNING: Download method in your options.json is set to \"remove\", downloaded source(s) will be deleted after use. Do you want to change download method to \"save\"? (y/n): "
-            change = gets.chomp
-
-            while true do
-                case change
-                when "y"
-                    options["sources"]["download"]["method"] = "save"
-                    sources = opts.sources ? opts.sources : options["sources"]["path"]
-                    File.open(sources, "w") do |f|
-                        f.write(JSON.pretty_generate(options))
-                    end
-                    break
-                when "n"
-                    break
-                else
-                    puts "Invalid choice. Use \"y\" or \"n\"."
-                    next
-                end
-            end
-        end
-
-        opts.number ? Sources::prepare_source(Sources::get_source_by_number(opts.number), options) : Sources::prepare_all(options)
+      command_download(args, opts)
   end
 end
 
@@ -73,8 +49,44 @@ command :run do |c|
     c.option '--rng [string]', String, 'Override random number generation method specified in your options.json file. Possible values: "hwrng", "random.org", "rand-hwrng-seed", "rand". Default value: "hwrng".'
     c.option '--sources [string]', String, 'Specify custom path to your sources.json file (default: "./sources.json").'
     c.action do |args, opts|
+        command_run(args, opts)
+    end
+end
+
+# TODO: command :set
+
+default_command :run
+
+def command_download(args, opts)
+    options = JSON.parse(File.read(opts.options ? opts.options : "./options.json"))
+
+    if options["sources"]["download"]["method"] == "remove"
+        puts "WARNING: Download method in your options.json is set to \"remove\", downloaded source(s) will be deleted after use. Do you want to change download method to \"save\"? (y/n): "
+        change = gets.chomp
+
+        while true do
+            case change
+            when "y"
+                options["sources"]["download"]["method"] = "save"
+                sources = opts.sources ? opts.sources : options["sources"]["path"]
+                File.open(sources, "w") do |f|
+                    f.write(JSON.pretty_generate(options))
+                end
+                break
+            when "n"
+                break
+            else
+                puts "Invalid choice. Use \"y\" or \"n\"."
+                next
+            end
+        end
+    end
+    opts.number ? Sources::prepare_source(Sources::get_source_by_number(opts.number), options) : Sources::prepare_all(options)
+end
+
+def command_run(args, opts)
         options = JSON.parse(File.read(opts.options ? opts.options : "./options.json"))
-        Sources::load_sources(opts.sources ? opts.sources : options["sources"]["path"], opts.categories ? parse_category_mods(opts.categories) : nil)
+        Sources::load_sources(opts.sources ? opts.sources : options["sources"]["path"], opts.categories ? Sources::parse_category_mods(opts.categories) : nil)
         number = opts.number ? opts.number : rng(options["rng"], Sources::sources_count , opts.rng ? opts.rng : nil)
         Devices::storage_get(options["sources"]["download"])
         Devices::storage_mount
@@ -83,27 +95,4 @@ command :run do |c|
         Player::play(source)
         Devices::storage_unmount
         Devices::storage_sleep
-    end
-end
-
-# TODO: command :set
-
-default_command :run
-
-def parse_category_mods(mod_string)
-    parsed_mods = Hash.new
-    parsed_mods[:adds] = []
-    parsed_mods[:rms] = []
-
-    mods = mod_string.split(" ")
-    mods.each do |m|
-        mod = m.split(".")
-        unless mod.first == ""
-            parsed_mods[:adds] << mod
-        else
-            mod.shift
-            parsed_mods[:rms] << mod
-        end
-    end
-    parsed_mods
 end
