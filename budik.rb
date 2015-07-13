@@ -42,6 +42,7 @@ command :config do |c|
     c.option '--edit [string]', String, 'Edit configuration file with specified name (name => options-name.yml). Default: edit options.yml.'
     c.option '--set [string]', String, 'Set configuration file with specified name (name => options-name.yml) as default. Default: set options.yml as default.'
     c.option '--delete [string]', String, 'Delete configuration file with specified name (name => options-name.yml). Default: does nothing.'
+    c.option '--app', 'Edit application\'s main configuration file.'
     c.action do |args, opts|
         command_config(args, opts)
     end
@@ -82,19 +83,22 @@ def command_config(args, opts)
     edit = opts.edit != nil
     set = opts.set != nil
     delete = opts.delete != nil
+    app = opts.app != nil
 
-    none = !new && !edit && !set && !delete
+    none = !new && !edit && !set && !delete && !app
 
     if none
         config_menu
-    elsif new && !edit && !set && !delete
+    elsif new && !edit && !set && !delete && !app
         config_new(opts.new == true ? nil : opts.new)
-    elsif edit && !new && !set && !delete
+    elsif edit && !new && !set && !delete && !app
         config_edit(opts.edit == true ? nil : opts.edit)
-    elsif set && !new && !edit && !delete
+    elsif set && !new && !edit && !delete && !app
         config_set(opts.set == true ? nil : opts.set)
-    elsif delete && !new && !edit && !set
+    elsif delete && !new && !edit && !set && !app
         config_delete(opts.delete == true ? nil : opts.delete)
+    elsif app && !new && !edit && !set && !delete
+        config_app
     else
         puts "Please use only one of the options new, edit, set, delete, or none. This doesn't include global options"
     end

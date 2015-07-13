@@ -128,7 +128,6 @@ class Sources
             unless youtube_id == nil
                 item["path"] = youtube_id
                 download(item, dir)
-                dir = dir[-1, 1] == "/" || dir[-1, 1] == "\\" ? dir : dir + "/"
                 item["path"] = dir + item["path"] + ".mp4"
                 item["remote"] = true
             end

@@ -12,9 +12,10 @@ class Options
                 options_file = @@config["program"]["options"]
                 options_path = options_dir + "options-" + options_file + ".yml"
             rescue
-                puts "Error accessing \"options.yml\". Restoring default."
+                puts "Error accessing your configuration files. Restoring default."
                 config = Hash.new
                 config["program"] = program_config = Hash.new
+                program_config["lang"] = "en"
                 program_config["options_dir"] = "options/"
                 program_config["options"] = "default"
                 File.open("options.yml", "w") do |f|
