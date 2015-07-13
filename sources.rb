@@ -4,7 +4,7 @@ class Sources
     @@sources = []
 
     def self.load_sources(path, mods = nil)
-        sources = JSON.parse(File.read(path))
+        sources = YAML.load_file(path)
         if mods == nil || mods[:adds].empty?
             parse_categories(sources)
         else
@@ -139,17 +139,18 @@ class Sources
     def self.download(item, dir)
         filename = item["path"] + ".mp4"
         unless File.file?(filename)
-            system("youtube-dl -o " + dir + "%(id)s.%(ext)s -f bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4 " + item["path"])
+            system("youtube-dl -o " + dir + "%(id)s.%(ext)s -f bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4 --write-info-json " + item["path"])
         end
     end
 
     def self.delete(source, os)
         source.each do |item|
+            path = '"' + item["path"] + '" "' + item["path"].chomp('.mp4') + '.info.json"'
             case os
             when "windows"
-                system("del /Q \"" + item["path"] + "\"") if item["remote"]
+                system("del /Q " + path) if item["remote"]
             else
-                system("rm " + item["path"]) if item["remote"]
+                system("rm " + path) if item["remote"]
             end
         end
     end
