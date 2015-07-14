@@ -229,7 +229,7 @@ end
 def config_category_os(edit = nil)
     questions = Hash.new
     questions[:config_os] = "Which platform is this configuration intended for (windows, unix, rpi)? "
-    questions[:config_os] += "<" + edit + "> "
+    questions[:config_os] += "<" + edit + "> " if edit != nil
 
     ask(questions[:config_os]) do |q|
         q.validate = /^windows|unix|rpi$/

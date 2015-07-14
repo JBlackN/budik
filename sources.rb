@@ -126,9 +126,9 @@ class Sources
         source.each do |item|
             youtube_id = YouTubeAddy.extract_video_id(item["path"])
             unless youtube_id == nil
-                item["path"] = youtube_id
+                item["id"] = youtube_id
                 download(item, dir)
-                item["path"] = dir + item["path"] + ".mp4"
+                item["path"] = dir + item["id"] + ".mp4"
                 item["remote"] = true
             end
         end
@@ -136,9 +136,15 @@ class Sources
     end
 
     def self.download(item, dir)
-        filename = item["path"] + ".mp4"
+        filename = item["id"] + ".mp4"
         unless File.file?(filename)
+            # TODO: NO PLAYLIST
             system("youtube-dl -o " + dir + "%(id)s.%(ext)s -f bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4 --write-info-json " + item["path"])
+
+            info_filename = dir + item["id"] + ".info.json"
+            json_info = JSON.parse(File.read(info_filename))
+            File.open(dir + item["id"] + ".yml", "w") { |f| f.puts json_info.ya2yaml(syck_compatible: true) }
+            FileUtils.rm(info_filename)
         end
     end
 
