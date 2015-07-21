@@ -218,6 +218,9 @@ def config_edit_wizard(filename)
       puts options_yml + "\n"
       File.open(filename, 'w') { |f| f.puts options_yml }
       break
+    else
+      puts 'Edit config: Invalid category choice.'
+      next
     end
   end
 end
@@ -349,6 +352,8 @@ def config_category_player(os, edit = nil)
         q.default = 3
       end
     end
+  else
+    fail 'Config: Invalid player choice'
   end
   player_opts['omxplayer'] = omx_opts
   player_opts['vlc'] = vlc_opts
@@ -569,6 +574,8 @@ def config_player_defaults(player)
     player_opts['volume_step'] = 1.0
     player_opts['wait_secs_after_run'] = 5
     player_opts['wait_secs_if_http'] = 3
+  else
+    fail 'Config: Invalid player choice'
   end
   player_opts
 end
@@ -580,6 +587,8 @@ def config_rng_defaults(method, os)
     rng_opts['source'] = os == 'windows' ? '' : (os == 'rpi' ? '/dev/hwrng' : '/dev/random')
   when :random_org
     rng_opts['apikey'] = ''
+  else
+    fail 'Case: Invalid RNG choice.'
   end
   rng_opts
 end
