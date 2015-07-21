@@ -12,11 +12,11 @@ class Devices
 
     def self.storage_get(download_options)
         unless @@storage_set
-            device = download_options["device"]
-            partition = download_options["partition"]
-            dir = download_options["dir"]
-            mountable = download_options["mount"]
-            can_sleep = download_options["sleep"]
+            device = download_options['device']
+            partition = download_options['partition']
+            dir = download_options['dir']
+            mountable = download_options['mount']
+            can_sleep = download_options['sleep']
             @@storage_device = device
             @@storge_partition = partition
             @@storage_dir = dir
@@ -27,32 +27,32 @@ class Devices
     end
 
     def self.storage_mount
-        system("udisksctl mount -b " + @@storage_partition) unless @@storage_mounted == nil || @@storage_mounted == true
+        system('udisksctl mount -b ' + @@storage_partition) unless @@storage_mounted == nil || @@storage_mounted == true
         @@storage_mounted = true
         @@storage_awake = true
     end
 
     def self.storage_unmount
-        system("udisksctl unmount -b " + @@storage_partition) unless @@storage_mounted == nil || @@storage_mounted == false
+        system('udisksctl unmount -b ' + @@storage_partition) unless @@storage_mounted == nil || @@storage_mounted == false
         @@storage_mounted = false
     end
 
     def self.storage_sleep
-        system("sudo hdparm -y " + @@storage_device) unless @@storage_awake == nil || @@storage_awake == false || @@storage_mounted == true
+        system('sudo hdparm -y ' + @@storage_device) unless @@storage_awake == nil || @@storage_awake == false || @@storage_mounted == true
         @@storage_awake == false
     end
 
     def self.storage_status
         status = Hash.new
-        status["mount"] = @@storage_mounted
-        status["sleep"] = !@@storage_awake
+        status['mount'] = @@storage_mounted
+        status['sleep'] = !@@storage_awake
         return status
     end
 
     def self.tv_get(tv_options)
         unless @@tv_set
-            @@tv_on = false if tv_options["available"]
-            @@tv_sleep_after_on = tv_options["waitSecsAfterOn"]
+            @@tv_on = false if tv_options['available']
+            @@tv_sleep_after_on = tv_options['waitSecsAfterOn']
             @@tv_set = true
         end
     end
@@ -71,6 +71,6 @@ class Devices
     end
 
     def self.tv_status
-        @@tv_on ? "on" : "off"
+        @@tv_on ? 'on' : 'off'
     end
 end

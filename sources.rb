@@ -19,10 +19,10 @@ class Sources
         parsed_mods[:adds] = []
         parsed_mods[:rms] = []
 
-        mods = mod_string.split(" ")
+        mods = mod_string.split(' ')
         mods.each do |m|
-            mod = m.split(".")
-            unless mod.first == ""
+            mod = m.split('.')
+            unless mod.first == ''
                 parsed_mods[:adds] << mod
             else
                 mod.shift
@@ -91,29 +91,29 @@ class Sources
                 normalized_source = []
                 source.each do |path|
                     new_item = Hash.new
-                    new_item["name"] = path
-                    new_item["path"] = path
+                    new_item['name'] = path
+                    new_item['path'] = path
                     normalized_source << new_item
                 end
             end
         elsif source.is_a? Hash
-            if source["path"].is_a? Array
+            if source['path'].is_a? Array
                 normalized_source = []
-                source["path"].each do |path|
+                source['path'].each do |path|
                     new_item = Hash.new
-                    new_item["name"] = source["name"]
-                    new_item["path"] = path
+                    new_item['name'] = source['name']
+                    new_item['path'] = path
                     normalized_source << new_item
                 end
-            elsif source["path"].is_a? String
+            elsif source['path'].is_a? String
                 normalized_source = []
                 normalized_source << source
             end
         elsif source.is_a? String
             normalized_source = []
             new_item = Hash.new
-            new_item["name"] = source
-            new_item["path"] = source
+            new_item['name'] = source
+            new_item['path'] = source
             normalized_source << new_item
         end
 
@@ -122,40 +122,40 @@ class Sources
 
     def self.prepare_source(source, options)
         source = normalize_source(source)
-        dir = options["sources"]["download"]["dir"]
+        dir = options['sources']['download']['dir']
         source.each do |item|
-            youtube_id = YouTubeAddy.extract_video_id(item["path"])
+            youtube_id = YouTubeAddy.extract_video_id(item['path'])
             unless youtube_id == nil
-                item["id"] = youtube_id
+                item['id'] = youtube_id
                 download(item, dir)
-                item["path"] = dir + item["id"] + ".mp4"
-                item["remote"] = true
+                item['path'] = dir + item['id'] + '.mp4'
+                item['remote'] = true
             end
         end
         source
     end
 
     def self.download(item, dir)
-        filename = item["id"] + ".mp4"
+        filename = item['id'] + '.mp4'
         unless File.file?(filename)
             # TODO: NO PLAYLIST
-            system("youtube-dl -o " + dir + "%(id)s.%(ext)s -f bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4 --write-info-json " + item["path"])
+            system('youtube-dl -o ' + dir + '%(id)s.%(ext)s -f bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4 --write-info-json ' + item['path'])
 
-            info_filename = dir + item["id"] + ".info.json"
+            info_filename = dir + item['id'] + '.info.json'
             json_info = JSON.parse(File.read(info_filename))
-            File.open(dir + item["id"] + ".yml", "w") { |f| f.puts json_info.ya2yaml(syck_compatible: true) }
+            File.open(dir + item['id'] + '.yml', 'w') { |f| f.puts json_info.ya2yaml(syck_compatible: true) }
             FileUtils.rm(info_filename)
         end
     end
 
     def self.delete(source, os)
         source.each do |item|
-            path = '"' + item["path"] + '" "' + item["path"].chomp('.mp4') + '.info.json"'
+            path = '"' + item['path'] + '" "' + item['path'].chomp('.mp4') + '.info.json"'
             case os
-            when "windows"
-                system("del /Q " + path) if item["remote"]
+            when 'windows'
+                system('del /Q ' + path) if item['remote']
             else
-                system("rm " + path) if item["remote"]
+                system('rm ' + path) if item['remote']
             end
         end
     end

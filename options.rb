@@ -7,21 +7,21 @@ class Options
             load_options(override)
         else
             begin
-                @@config = YAML.load_file("options.yml")
-                options_dir = @@config["program"]["options_dir"]
-                options_file = @@config["program"]["options"]
-                options_path = options_dir + "options-" + options_file + ".yml"
+                @@config = YAML.load_file('options.yml')
+                options_dir = @@config['program']['options_dir']
+                options_file = @@config['program']['options']
+                options_path = options_dir + 'options-' + options_file + '.yml'
             rescue
-                puts "Error accessing your configuration files. Restoring default."
+                puts 'Error accessing your configuration files. Restoring default.'
                 config = Hash.new
-                config["program"] = program_config = Hash.new
-                program_config["lang"] = "en"
-                program_config["options_dir"] = "options/"
-                program_config["options"] = "default"
-                File.open("options.yml", "w") do |f|
+                config['program'] = program_config = Hash.new
+                program_config['lang'] = 'en'
+                program_config['options_dir'] = 'options/'
+                program_config['options'] = 'default'
+                File.open('options.yml', 'w') do |f|
                     f.puts config.ya2yaml(syck_compatible: true)
                 end
-                options_path = "options/options-default.yml"
+                options_path = 'options/options-default.yml'
             end
             load_options(options_path)
         end
