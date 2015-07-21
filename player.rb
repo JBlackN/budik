@@ -20,10 +20,10 @@ class Player
   end
 
   def self.play(source)
-    unless @@player == 'vlc'
-      omxplayer(source)
-    else
+    if @@player == 'vlc'
       vlc(source)
+    else
+      omxplayer(source)
     end
   end
 

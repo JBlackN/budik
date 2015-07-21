@@ -2,10 +2,10 @@ require 'net/http'
 require 'json'
 
 def rng(options, items, method_override = nil)
-  unless method_override != nil
-    method = options['method']
-  else
+  if method_override != nil
     method = method_override
+  else
+    method = options['method']
   end
 
   case method
@@ -78,6 +78,6 @@ def random_org(options, items)
 end
 
 def swrng(items, seed = nil)
-  seed == nil ? srand() : srand(seed) # TODO: Test this
+  seed == nil ? srand : srand(seed) # TODO: Test this
   rand(0...items)
 end

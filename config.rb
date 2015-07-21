@@ -5,7 +5,7 @@
 def config_menu
   heading = 'Budík.rb configuration'
   puts "\n" + heading
-  (1..(heading.length + 1)).each { |x| print '=' }
+  (1..(heading.length + 1)).each { print '=' }
   puts
 
   while true do
@@ -116,7 +116,7 @@ end
 def config_new_wizard(filename)
   heading = 'NEW CONFIGURATION: ' + filename
   puts "\n" + heading
-  (1..heading.length).each { |x| print '=' }
+  (1..heading.length).each { print '=' }
   puts
 
   options = Hash.new
@@ -177,7 +177,7 @@ end
 def config_edit_wizard(filename)
   heading = 'EDIT CONFIGURATION: ' + filename
   puts "\n" + heading
-  (1..heading.length).each { |x| print '=' }
+  (1..heading.length).each { print '=' }
   puts
 
   options = YAML.load_file(filename)
@@ -209,9 +209,9 @@ def config_edit_wizard(filename)
     when 'done'
       result_heading = 'HERE IS YOUR UPDATED CONFIGURATION:'
       puts
-      (1..result_heading.length).each { |x| print '=' }
+      (1..result_heading.length).each { print '=' }
       puts "\n" + result_heading
-      (1..result_heading.length).each { |x| print '=' }
+      (1..result_heading.length).each { print '=' }
       puts
 
       options_yml = options.ya2yaml(syck_compatible: true)
@@ -243,7 +243,7 @@ end
 def config_category_player(os, edit = nil)
   player_heading = 'PLAYER CONFIGURATION:'
   puts "\n" + player_heading
-  (1..player_heading.length).each { |x| print '-' }
+  (1..player_heading.length).each { print '-' }
   puts
 
   questions = Hash.new
@@ -363,7 +363,7 @@ end
 def config_category_rng(os, edit = nil)
   rng_heading = 'RANDOM NUMBER GENERATION CONFIGURATION:'
   puts "\n" + rng_heading
-  (1..rng_heading.length).each { |x| print '-' }
+  (1..rng_heading.length).each { print '-' }
   puts
 
   questions = Hash.new
@@ -420,7 +420,7 @@ end
 def config_category_sources(os, edit = nil)
   src_heading = 'MEDIA SOURCES CONFIGURATION:'
   puts "\n" + src_heading
-  (1..src_heading.length).each { |x| print '-' }
+  (1..src_heading.length).each { print '-' }
   puts
 
   questions = Hash.new
@@ -534,7 +534,7 @@ def config_category_tv(os, edit = nil)
   if os == 'rpi' || edit != nil
     tv_heading = 'TV CONFIGURATION:'
     puts "\n" + tv_heading
-    (1..tv_heading.length).each { |x| print '-' }
+    (1..tv_heading.length).each { print '-' }
     puts
 
     tv_opts['available'] = agree(questions[:tv_connected])
@@ -630,7 +630,7 @@ end
 def config_app
   heading = 'APP CONFIGURATION'
   puts "\n" + heading
-  (1..heading.length).each { |x| print '=' }
+  (1..heading.length).each { print '=' }
   puts
 
   config = Options::get_config

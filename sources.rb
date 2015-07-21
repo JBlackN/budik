@@ -22,11 +22,11 @@ class Sources
     mods = mod_string.split(' ')
     mods.each do |m|
       mod = m.split('.')
-      unless mod.first == ''
-        parsed_mods[:adds] << mod
+      if mod.first == ''
+          mod.shift
+          parsed_mods[:rms] << mod
       else
-        mod.shift
-        parsed_mods[:rms] << mod
+          parsed_mods[:adds] << mod
       end
     end
     parsed_mods

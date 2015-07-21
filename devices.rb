@@ -39,7 +39,7 @@ class Devices
 
   def self.storage_sleep
     system('sudo hdparm -y ' + @@storage_device) unless @@storage_awake == nil || @@storage_awake == false || @@storage_mounted == true
-    @@storage_awake == false
+    @@storage_awake = false
   end
 
   def self.storage_status

@@ -84,13 +84,13 @@ def command_config(args, opts)
   if none
     config_menu
   elsif new && !edit && !set && !delete && !app
-    config_new(opts.new == true ? nil : opts.new)
+    config_new(opts.new ? nil : opts.new)
   elsif edit && !new && !set && !delete && !app
-    config_edit(opts.edit == true ? nil : opts.edit)
+    config_edit(opts.edit ? nil : opts.edit)
   elsif set && !new && !edit && !delete && !app
-    config_set(opts.set == true ? nil : opts.set)
+    config_set(opts.set ? nil : opts.set)
   elsif delete && !new && !edit && !set && !app
-    config_delete(opts.delete == true ? nil : opts.delete)
+    config_delete(opts.delete ? nil : opts.delete)
   elsif app && !new && !edit && !set && !delete
     config_app
   else
@@ -146,7 +146,7 @@ def command_sources(args, opts)
         if new_item.has_key? 'category'
           category = new_item['category']
           if category.include? ' ' || category[0] == '.'
-            puts 'Invalid category.'
+            fail 'Invalid category.'
           else
             sub_sources = sources
             category.split('.').each do |c|
