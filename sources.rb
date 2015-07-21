@@ -34,7 +34,7 @@ class Sources
 
   def self.parse_categories(categories, rm = false)
     categories.each do |category, subcategory|
-      if (subcategory.is_a? Hash)
+      if subcategory.is_a? Hash
         parse_categories(subcategory, rm)
       else
         parse_items(subcategory) unless rm
@@ -49,7 +49,7 @@ class Sources
       mod.each do |subcategory|
         category = category[subcategory]
       end
-      if (add)
+      if add
         parse_items(category) unless category.is_a? Hash
         parse_categories(category) if category.is_a? Hash
       else
