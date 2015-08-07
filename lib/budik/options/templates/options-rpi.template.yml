@@ -1,0 +1,38 @@
+--- 
+os: rpi
+player: 
+  omxplayer: 
+    default_volume: -2100
+    path: omxplayer
+    volume_step_secs: 3
+  player: omxplayer
+  vlc: 
+    default_volume: 128
+    fullscreen: true
+    path: vlc
+    rc_host: localhost
+    rc_port: 50000
+    volume_fade_in_secs: 0.125
+    volume_step: 1.0
+    wait_secs_after_vlc_runs: 5
+    wait_secs_if_http_source: 3
+rng: 
+  hwrng: 
+    source: /dev/hwrng
+  method: hwrng
+  random.org: 
+    apikey: ""
+sources: 
+  categories: all
+  download: 
+    device: /dev/sda
+    dir: /mnt/Budík.rb/
+    method: remove
+    mount: true
+    partition: /dev/sda1
+    sleep: true
+  path: sources.yml
+tv: 
+  available: true
+  use_if_no_video: true
+  wait_secs_after_on: 15
