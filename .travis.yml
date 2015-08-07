@@ -3,7 +3,7 @@ rvm:
   - 2.2.2
 before_install: gem install bundler -v 1.10.6
 script:
-  - 'bundle exec rspec'
-  - 'bundle exec cucumber'
+  - 'bundle exec rake spec'
+  - 'bundle exec rake features'
   - 'bundle exec rake coveralls:push'
-  - 'bundle exec rubocop'
+  - 'bundle exec rake rubocop'
