@@ -1,6 +1,3 @@
-require 'open3'
-require 'socket'
-
 class Player
   @@player = 'omxplayer'
   @@player_options = nil

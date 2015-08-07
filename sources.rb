@@ -1,5 +1,3 @@
-require 'youtube_addy'
-
 class Sources
   @@sources = []
 

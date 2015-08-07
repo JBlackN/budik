@@ -1,6 +1,3 @@
-require 'net/http'
-require 'json'
-
 def rng(options, items, method_override = nil)
   if method_override != nil
     method = method_override
