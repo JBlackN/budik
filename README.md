@@ -1,6 +1,10 @@
-[![build status](https://ci.gitlab.com/projects/5685/status.png?ref=master)](https://ci.gitlab.com/projects/5685?ref=master)
-
 # Budik
+
+[![Build Status](https://travis-ci.org/JBlackN/budik.svg?branch=master)](https://travis-ci.org/JBlackN/budik)
+[![Dependency Status](https://gemnasium.com/JBlackN/budik.svg)](https://gemnasium.com/JBlackN/budik)
+[![Code Climate](https://codeclimate.com/github/JBlackN/budik/badges/gpa.svg)](https://codeclimate.com/github/JBlackN/budik)
+[![Coverage Status](https://coveralls.io/repos/JBlackN/budik/badge.svg?branch=master&service=github)](https://coveralls.io/github/JBlackN/budik?branch=master)
+[![Inline docs](http://inch-ci.org/github/JBlackN/budik.svg?branch=master&style=shields)](http://inch-ci.org/github/JBlackN/budik)
 
 Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/budik`. To experiment with that code, run `bin/console` for an interactive prompt.
 
