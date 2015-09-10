@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["jblack@paworld.eu"]
 
   spec.summary       = %q{Alarm clock.}
-  #spec.description   = %q{TODO: Write a longer description or delete this line.}
+  spec.description   = %q{Alarm clock which randomly plays a song or a video from YouTube or your local collection.}
   spec.homepage      = "http://jblack.paworld.eu/apps/budik"
   spec.license       = "MIT"
 
@@ -29,6 +29,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "awesome_print"
   spec.add_dependency "commander"
+  spec.add_dependency "r18n-core"
   spec.add_dependency "ya2yaml"
   spec.add_dependency "youtube_addy"
 
