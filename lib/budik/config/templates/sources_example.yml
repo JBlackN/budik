@@ -1,0 +1,24 @@
+---
+- "path"
+-
+  - "path1"
+  - "path2"
+-
+  name: "name"
+  path: "path"
+-
+  name: "name"
+  category: ["category1", "subcategory1"]
+  path: "path"
+-
+  name: "name"
+  category: ["category1", "subcategory2"]
+  path: ["path1", "path2"]
+-
+  name: "name"
+  category:
+    - "category2"
+    - "subcategory1"
+  path:
+    - "path1"
+    - "path2"

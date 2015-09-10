@@ -19,7 +19,7 @@ require './lib/budik/config'
 #require './budik/devices.rb'
 #require './budik/player.rb'
 #require './budik/rng.rb'
-#require './budik/sources.rb'
+require './lib/budik/sources'
 require './lib/budik/version'
 
 module Budik

@@ -1,3 +1,5 @@
 lang: "en" # Do not remove this line.
 config:
   example: "This is an example string."
+sources:
+  invalid_item: "Item %1 is invalid."
