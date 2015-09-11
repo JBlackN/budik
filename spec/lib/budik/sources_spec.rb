@@ -1,4 +1,3 @@
-#require 'r18n-core'
 require 'fileutils'
 require 'singleton'
 require 'spec_helper'
