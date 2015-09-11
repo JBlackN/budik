@@ -32,6 +32,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "r18n-core"
   spec.add_dependency "ya2yaml"
   spec.add_dependency "youtube_addy"
+  spec.add_dependency "youtube-dl.rb"
 
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"

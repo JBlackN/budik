@@ -25,6 +25,38 @@ module Budik
       @sources = modified_sources.uniq
     end
 
+    def download(number = nil)
+      dir = Config.instance.options['sources']['download']['dir']
+      if number
+        item = @sources[number]
+        if item[:path].is_a? Array
+          item[:path].each do |path|
+            download_youtube(path, dir)
+          end
+        else
+          download_youtube(item[:path], dir)
+        end
+      else
+        @sources.each_with_index do |_source, index|
+          download(index)
+        end
+      end
+    end
+
+    def download_youtube(address, dir)
+      youtube_id = YouTubeAddy.extract_video_id(address)
+      if youtube_id && !File.file?(dir + youtube_id + '.mp4')
+        # TODO: Update youtube-dl if fail
+        options = {
+          # TODO: username + password
+          output: dir + '%(id)s.%(ext)s',
+          format: 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4',
+          playlist: false
+        }
+        YoutubeDL.download address, options
+      end
+    end
+
     def parse(sources, mods = nil)
       sources.each do |item|
         if item.is_a? Array

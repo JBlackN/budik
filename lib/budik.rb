@@ -2,7 +2,7 @@
 
 #require 'awesome_print'
 require 'commander/import'
-#require 'fileutils'
+require 'fileutils'
 #require 'json'
 #require 'net/http'
 #require 'open3'
@@ -12,7 +12,8 @@ require 'singleton'
 #require 'uri'
 require 'ya2yaml'
 require 'yaml'
-#require 'youtube_addy'
+require 'youtube_addy'
+require 'youtube-dl.rb'
 
 require './lib/budik/command'
 require './lib/budik/config'
