@@ -2,7 +2,10 @@ language: ruby
 rvm:
   - 2.2.2
 before_install: gem install bundler -v 1.10.6
-before_script: sudo aptitude -y -q install libav-tools
+addons:
+  apt:
+    packages:
+      - libav-tools
 script:
   - 'bundle exec rake spec'
   - 'bundle exec rake features'
