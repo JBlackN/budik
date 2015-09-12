@@ -28,9 +28,10 @@ sources:
     device: ""
     dir: downloads/
     method: store
-    mount: false
+    mount: ''
     partition: ""
-    sleep: false
+    sleep: ''
+    unmount: ''
   path: sources.yml
 tv: 
   available: false
