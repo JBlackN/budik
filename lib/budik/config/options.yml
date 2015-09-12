@@ -1,5 +1,6 @@
 --- 
 os: windows
+lang: en
 player: 
   omxplayer: 
     default_volume: -2100
@@ -32,7 +33,7 @@ sources:
     partition: ""
     sleep: ''
     unmount: ''
-  path: sources.yml
+  path: ./lib/budik/config/sources.yml
 tv: 
   available: false
   use_if_no_video: false

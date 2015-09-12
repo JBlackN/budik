@@ -3,7 +3,6 @@ require 'spec_helper'
 describe Budik::Devices, '#initialize' do
   it 'correctly parses commands' do
     config = Budik::Config.instance
-    config.load(Hash.new)
     storage_options = config.options['sources']['download']
     storage_options['device'] = '/dev/sda'
     storage_options['partition'] = '/dev/sda1'

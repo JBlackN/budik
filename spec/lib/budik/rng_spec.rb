@@ -7,7 +7,6 @@ describe Budik::Rng, '#generate' do
   context 'using hwrng' do
     it 'generates random number' do
       config = Budik::Config.instance
-      config.load(Hash.new)
 
       config.options['rng']['hwrng']['source'] = '/dev/hwrng'
       5.times do
@@ -32,7 +31,6 @@ describe Budik::Rng, '#generate' do
   context 'using random.org' do
     it 'generates random number' do
       config = Budik::Config.instance
-      config.load(Hash.new)
 
       if config.options['rng']['random.org']['apikey']
         num = Budik::Rng.instance.generate(100, 'random.org')

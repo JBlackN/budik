@@ -38,7 +38,6 @@ describe Budik::Sources, '#download' do # TODO: rewrite
   context 'using specified number' do
     it 'downloads an item' do
       config = Budik::Config.instance
-      config.load(Hash.new)
       config.options['sources']['download']['dir'] = './spec/'
 
       sources_example = [

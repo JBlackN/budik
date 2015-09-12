@@ -4,10 +4,9 @@ module Budik
   end
 
   def self.command_run(_args, opts)
-    config = Config.instance
-    config.load(opts)
+    options = Config.instance.options
 
-    sources_path = config.options['sources']['path']
+    sources_path = options['sources']['path']
     Sources.instance.parse(sources_path, opts.categories)
   end
 
