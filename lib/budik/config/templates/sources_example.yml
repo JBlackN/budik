@@ -1,24 +1,23 @@
 ---
-- "path"
--
-  - "path1"
-  - "path2"
--
-  name: "name"
-  path: "path"
--
-  name: "name"
-  category: ["category1", "subcategory1"]
-  path: "path"
--
-  name: "name"
-  category: ["category1", "subcategory2"]
-  path: ["path1", "path2"]
--
-  name: "name"
-  category:
-    - "category2"
-    - "subcategory1"
-  path:
-    - "path1"
-    - "path2"
+category1:
+  subcategory1:
+    - "path"
+    -
+      - "path1"
+      - "path2"
+    - name:
+      - "path"
+    - name:
+      - "path1"
+      - "path2"
+  subcategory2:
+    - "path"
+category2:
+  subcategory1:
+    subsubcategory1:
+      - "path1"
+      - "path2"
+    subsubcategory2:
+      - "path3"
+  subcategory2:
+    - "path4"

@@ -57,27 +57,43 @@ module Budik
       end
     end
 
-    def parse(sources, mods = nil)
-      sources.each do |item|
-        if item.is_a? Array
-          normalized_item = { name: '', category: ['default'], path: []}
-          item.each do |subitem|
-            normalized_item[:name] += (subitem + ' + ')
-            normalized_item[:path] << subitem
-          end
-          3.times { normalized_item[:name].chop! }
-        elsif item.is_a? Hash
-          normalized_item = {}
-          normalized_item[:name] = item['name']
-          normalized_item[:category] = item['category'] ? item['category'] : ['default']
-          normalized_item[:path] = item['path']
-        elsif item.is_a? String
-          normalized_item = { name: item, category: ['default'], path: item }
-        else # TODO: test
-          fail Config.instance.lang.sources.invalid_item item.to_s
-        end
+    def normalize(item, category)
+      normalized_item = { name: '', category: category, path: [] }
 
-        @sources << normalized_item
+      if item.is_a? Array
+        item.each do |subitem|
+          normalized_item[:name] += (subitem + ' + ')
+          normalized_item[:path] << subitem
+        end
+        3.times { normalized_item[:name].chop! }
+      elsif item.is_a? Hash
+        item.each do |name, paths|
+          normalized_item[:name] = name
+          paths.each do |path|
+            normalized_item[:path] << path
+          end
+        end
+      elsif item.is_a? String
+        normalized_item[:name] = item
+        normalized_item[:path] << item
+      else
+        fail 'Invalid item in sources' # TODO
+      end
+
+      return normalized_item
+    end
+
+    def parse(sources, mods = nil, current_category = [])
+      sources.each do |category, contents|
+        if contents.is_a? Hash
+          parse(contents, mods, current_category + ([] << category))
+        elsif contents.is_a? Array
+          contents.each do |item|
+            @sources << normalize(item, current_category + ([] << category))
+          end
+        else
+          fail 'Invalid sources format' # TODO
+        end
       end
 
       mods = (mods.is_a? String) ? parse_mods(mods) : mods

@@ -10,19 +10,31 @@ describe Budik::Sources, '#apply_mods' do
     Budik::Sources.instance.sources = []
     Budik::Sources.instance.parse(YAML.load_file('./lib/budik/config/templates/sources_example.yml'))
 
-    mods = {adds: [['category1']], rms: [['subcategory1']]}
+    mods = {
+      adds: [
+        ['category1', 'subcategory2'],
+        ['category2', 'subcategory1']
+      ],
+      rms: [
+        ['category2', 'subcategory1', 'subsubcategory1']
+      ]
+    }
     Budik::Sources.instance.apply_mods(mods)
     sources_expected_result = [
-        {name: 'name',
+        {name: 'path',
          category: ['category1', 'subcategory2'],
-         path: ['path1', 'path2']}
+         path: ['path']},
+
+        {name: 'path3',
+         category: ['category2', 'subcategory1', 'subsubcategory2'],
+         path: ['path3']}
     ]
 
     expect(Budik::Sources.instance.sources).to eq sources_expected_result
   end
 end
 
-describe Budik::Sources, '#download' do
+describe Budik::Sources, '#download' do # TODO: rewrite
   context 'using specified number' do
     it 'downloads an item' do
       config = Budik::Config.instance
@@ -30,18 +42,14 @@ describe Budik::Sources, '#download' do
       config.options['sources']['download']['dir'] = './spec/'
 
       sources_example = [
-        {
-          name: 'Test item 1',
-          category: ['test'],
-          path: 'https://www.youtube.com/watch?v=ghxo4OMh1YU'
-        },
+        {name: 'Test item 1',
+         category: ['test'],
+         path: ['https://www.youtube.com/watch?v=ghxo4OMh1YU']},
 
-        {
-          name: 'Test item 2',
-          category: ['test'],
-          path: ['https://www.youtube.com/watch?v=tPEE9ZwTmy0',
-                 'https://www.youtube.com/watch?v=wGyUP4AlZ6I']
-        }
+        {name: 'Test item 2',
+         category: ['test'],
+         path: ['https://www.youtube.com/watch?v=tPEE9ZwTmy0',
+                'https://www.youtube.com/watch?v=wGyUP4AlZ6I']}
       ]
       Budik::Sources.instance.sources = sources_example
 
@@ -90,28 +98,40 @@ describe Budik::Sources, '#parse' do
       Budik::Sources.instance.parse(sources_example)
       sources_expected_result = [
         {name: 'path',
-         category: ['default'],
-         path: 'path'},
+         category: ['category1', 'subcategory1'],
+         path: ['path']},
         
-         {name: 'path1 + path2',
-         category: ['default'],
+        {name: 'path1 + path2',
+         category: ['category1', 'subcategory1'],
          path: ['path1', 'path2']},
-        
-        {name: 'name',
-         category: ['default'],
-         path: 'path'},
         
         {name: 'name',
          category: ['category1', 'subcategory1'],
-         path: 'path'},
+         path: ['path']},
         
         {name: 'name',
-         category: ['category1', 'subcategory2'],
+         category: ['category1', 'subcategory1'],
          path: ['path1', 'path2']},
         
-        {name: 'name',
-         category: ['category2', 'subcategory1'],
-         path: ['path1', 'path2']}
+        {name: 'path',
+         category: ['category1', 'subcategory2'],
+         path: ['path']},
+        
+        {name: 'path1',
+         category: ['category2', 'subcategory1', 'subsubcategory1'],
+         path: ['path1']},
+        
+        {name: 'path2',
+         category: ['category2', 'subcategory1', 'subsubcategory1'],
+         path: ['path2']},
+        
+        {name: 'path3',
+         category: ['category2', 'subcategory1', 'subsubcategory2'],
+         path: ['path3']},
+        
+        {name: 'path4',
+         category: ['category2', 'subcategory2'],
+         path: ['path4']}
       ]
       
       expect(Budik::Sources.instance.sources).to eq sources_expected_result
@@ -120,14 +140,14 @@ describe Budik::Sources, '#parse' do
 
   context 'with modifiers' do
     it 'parses sources to program usable format' do
-      mods_example = '.subcategory1 .default category1'
+      mods_example = '.subcategory1 category1'
       sources_example = YAML.load_file('./lib/budik/config/templates/sources_example.yml')
       Budik::Sources.instance.sources = []
       Budik::Sources.instance.parse(sources_example, mods_example)
       sources_expected_result = [
-         {name: 'name',
+         {name: 'path',
          category: ['category1', 'subcategory2'],
-         path: ['path1', 'path2']}
+         path: ['path']}
       ]
       
       expect(Budik::Sources.instance.sources).to eq sources_expected_result
