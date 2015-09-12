@@ -67,7 +67,7 @@ module Budik
     end
 
     def tv_on
-      unless @@tv_on == nil || @tv_on == true
+      unless @tv[:on] == nil || @tv[:on] == true
         system('echo "on 0" | cec-client -s')
       end
       @tv[:on] = true

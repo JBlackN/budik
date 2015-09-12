@@ -32,12 +32,12 @@ module Budik
       begin
         source = File.new(options['source'], 'r')
         max = 2**64
-        threshold = (max - items) % items
+        threshold = (max - items - 1) % (items - 1)
         number = source.read(8).unpack('Q')
         while number.first < threshold do
           number = source.read(8).unpack('Q')
         end
-        number.first % items
+        number.first % (items - 1)
       rescue
         puts "Error: Couldn't obtain random number from #{options['source']}."
         puts 'Falling back to rand() with default seed.'
@@ -55,7 +55,7 @@ module Budik
           apiKey: options['apikey'],
           n: 1,
           min: 0,
-          max: items
+          max: items - 1
         },
         id: 29
       }

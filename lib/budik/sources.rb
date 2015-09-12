@@ -25,16 +25,20 @@ module Budik
       @sources = modified_sources.uniq
     end
 
+    def count
+      @sources.length
+    end
+
     def download(number = nil)
       dir = Config.instance.options['sources']['download']['dir']
       if number
         item = @sources[number]
-        if item[:path].is_a? Array
-          item[:path].each do |path|
-            download_youtube(path, dir)
+        item[:path].each do |path|
+          id = YouTubeAddy.extract_video_id(path)
+          if id
+            path = File.expand_path(dir + id + '.mp4')
+            download_youtube(id, dir)
           end
-        else
-          download_youtube(item[:path], dir)
         end
       else
         @sources.each_with_index do |_source, index|
@@ -43,9 +47,8 @@ module Budik
       end
     end
 
-    def download_youtube(address, dir)
-      youtube_id = YouTubeAddy.extract_video_id(address)
-      if youtube_id && !File.file?(dir + youtube_id + '.mp4')
+    def download_youtube(id, dir)
+      if id && !File.file?(dir + id + '.mp4')
         # TODO: Update youtube-dl if fail
         options = {
           # TODO: username + password
@@ -53,7 +56,7 @@ module Budik
           format: 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4',
           playlist: false
         }
-        YoutubeDL.download address, options
+        YoutubeDL.download id, options
       end
     end
 
@@ -84,6 +87,8 @@ module Budik
     end
 
     def parse(sources, mods = nil, current_category = [])
+      sources = YAML.load_file(sources) if sources.is_a? String
+
       sources.each do |category, contents|
         if contents.is_a? Hash
           parse(contents, mods, current_category + ([] << category))
@@ -115,6 +120,31 @@ module Budik
       end
 
       return parsed_mods
+    end
+
+    def remove(number = nil)
+      options = Config.instance.options['sources']['download']
+
+      unless options['keep']
+        dir = options['dir']
+        if number
+          item = @sources[number]
+          item[:path].each do |path|
+            is_url = (path =~ /\A#{URI::regexp(['http', 'https'])}\z/)
+            if is_url
+              id = YouTubeAddy.extract_video_id(path)
+              path = File.expand_path(dir + id + '.mp4')
+              FileUtils.rm path, force: true
+            else
+              FileUtils.rm File.expand_path(path), force: true
+            end
+          end
+        else
+          @sources.each_with_index do |_source, index|
+            remove(index)
+          end
+        end
+      end
     end
   end
 end

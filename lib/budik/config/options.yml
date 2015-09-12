@@ -28,7 +28,7 @@ sources:
   download: 
     device: ""
     dir: downloads/
-    method: store
+    keep: true
     mount: ''
     partition: ""
     sleep: ''

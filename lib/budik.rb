@@ -49,7 +49,7 @@ module Budik
         c.summary = 'DEFAULT: Runs alarm.'
         c.description = 'Runs alarm with specified options. CLI options > options.yml.'
         c.option '-c', '--categories [string]', String, 'Limit selection by categories. Example usage: "cat1.subcat1 cat2.subcat1.subsubcat1 .excludethis.subcat etc."'
-        c.option '-d', '--download-method [string]', String, 'Override download method set in your active options.'
+        c.option '-d', '--download-keep [string]', String, 'Override download method set in your active options.'
         c.option '-n', '--number [integer]', Integer, 'Override selection using random number generator by specifying fixed number.'
         c.option '-p', '--player [string]', String, 'Override which player to use.'
         c.option '-r', '--rng [string]', String, 'Override random number generation method specified in your options.yml file. Possible values: "hwrng", "random.org", "rand-hwrng-seed", "rand". Default value: "hwrng".'
@@ -97,8 +97,10 @@ module Budik
           command_unset(_args, opts)
         end
       end
+
+      run!
     end
   end
 
-  Budik.new.run
+  Budik.new.run if $0 == __FILE__
 end

@@ -11,19 +11,19 @@ describe Budik::Rng, '#generate' do
       config.options['rng']['hwrng']['source'] = '/dev/hwrng'
       5.times do
         num = Budik::Rng.instance.generate(100, 'hwrng')
-        expect(num >= 0 && num <= 100).to eq true
+        expect(num >= 0 && num < 100).to eq true
       end
 
       config.options['rng']['hwrng']['source'] = '/dev/random'
       5.times do
         num = Budik::Rng.instance.generate(100, 'hwrng')
-        expect(num >= 0 && num <= 100).to eq true
+        expect(num >= 0 && num < 100).to eq true
       end
 
       config.options['rng']['hwrng']['source'] = '/dev/urandom'
       100.times do
         num = Budik::Rng.instance.generate(100, 'hwrng')
-        expect(num >= 0 && num <= 100).to eq true
+        expect(num >= 0 && num < 100).to eq true
       end
     end
   end
@@ -34,7 +34,7 @@ describe Budik::Rng, '#generate' do
 
       if config.options['rng']['random.org']['apikey']
         num = Budik::Rng.instance.generate(100, 'random.org')
-        expect(num >= 0 && num <= 100).to eq true
+        expect(num >= 0 && num < 100).to eq true
       end
     end
   end
@@ -43,9 +43,8 @@ describe Budik::Rng, '#generate' do
     it 'generates random number' do
       100.times do
         num = Budik::Rng.instance.generate(100, 'rand')
-        expect(num >= 0 && num <= 100).to eq true
+        expect(num >= 0 && num < 100).to eq true
       end
     end
   end
 end
-

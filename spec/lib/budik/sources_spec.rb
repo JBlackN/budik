@@ -2,6 +2,7 @@ require 'fileutils'
 require 'singleton'
 require 'spec_helper'
 require 'yaml'
+require 'youtube_addy'
 
 require 'budik/sources'
 
@@ -31,6 +32,13 @@ describe Budik::Sources, '#apply_mods' do
     ]
 
     expect(Budik::Sources.instance.sources).to eq sources_expected_result
+  end
+end
+
+describe Budik::Sources, '#count' do
+  it 'returns correct count of sources' do
+    Budik::Sources.instance.sources = [1, 2, 3]
+    expect(Budik::Sources.instance.count).to eq 3
   end
 end
 
@@ -72,8 +80,6 @@ describe Budik::Sources, '#download' do # TODO: rewrite
       expect(File.file? './spec/tPEE9ZwTmy0.mp4').to eq true
       expect(File.file? './spec/wGyUP4AlZ6I.mp4').to eq true
       FileUtils.rm './spec/ghxo4OMh1YU.mp4', force: true
-      FileUtils.rm './spec/tPEE9ZwTmy0.mp4', force: true
-      FileUtils.rm './spec/wGyUP4AlZ6I.mp4', force: true
     end
   end
 end
@@ -85,7 +91,6 @@ describe Budik::Sources, '#download_youtube' do
     Budik::Sources.instance.download_youtube(test_address, test_dir)
 
     expect(File.file? './spec/ghxo4OMh1YU.mp4').to eq true
-    FileUtils.rm './spec/ghxo4OMh1YU.mp4', force: true
   end
 end
 
@@ -160,5 +165,51 @@ describe Budik::Sources, '#parse_mods' do
     expected_result = { adds: [['a', 'b'], ['c', 'd', 'e'], ['i'], ['k', 'l']], rms: [['f'], ['g', 'h'], ['j'], ['m', 'n', 'o']]}
 
     expect(parsed_mods).to eq expected_result
+  end
+end
+
+describe Budik::Sources, '#remove' do
+  context 'using specified number' do
+    it 'removes downloaded file' do
+      Budik::Config.instance.options['sources']['download']['keep'] = false
+      sources_example = [
+        {name: 'Test item 1',
+         category: ['test'],
+         path: ['https://www.youtube.com/watch?v=ghxo4OMh1YU']},
+
+        {name: 'Test item 2',
+         category: ['test'],
+         path: ['https://www.youtube.com/watch?v=tPEE9ZwTmy0',
+                'https://www.youtube.com/watch?v=wGyUP4AlZ6I']}
+      ]
+      Budik::Sources.instance.sources = sources_example
+
+      Budik::Sources.instance.remove(0)
+      id = YouTubeAddy.extract_video_id(sources_example[0][:path][0])
+      expect(File.file?('./spec/' + id + '.mp4')).to eq false
+    end
+  end
+
+  context 'by default' do
+    it 'removes all downloaded files' do
+      Budik::Config.instance.options['sources']['download']['keep'] = false
+      sources_example = [
+        {name: 'Test item 1',
+         category: ['test'],
+         path: ['https://www.youtube.com/watch?v=ghxo4OMh1YU']},
+
+        {name: 'Test item 2',
+         category: ['test'],
+         path: ['https://www.youtube.com/watch?v=tPEE9ZwTmy0',
+                'https://www.youtube.com/watch?v=wGyUP4AlZ6I']}
+      ]
+      Budik::Sources.instance.sources = sources_example
+
+      Budik::Sources.instance.remove
+      id1 = YouTubeAddy.extract_video_id(sources_example[1][:path][0])
+      id2 = YouTubeAddy.extract_video_id(sources_example[1][:path][1])
+      expect(File.file?('./spec/' + id1 + '.mp4')).to eq false
+      expect(File.file?('./spec/' + id2 + '.mp4')).to eq false
+    end
   end
 end

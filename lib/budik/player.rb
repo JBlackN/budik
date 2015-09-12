@@ -23,7 +23,7 @@ module Budik
     end
 
     def omxplayer(source)
-      source[:path].each do |item| # TODO: ensure path is always array
+      source[:path].each do |item|
         command = @player_options['path'] + ' --vol ' + @player_options['defaultVolume'].to_s + ' ' + item
         Open3.popen3(command) do |i, o, e, t|
           7.times do
