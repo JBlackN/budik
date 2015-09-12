@@ -33,7 +33,7 @@ sources:
     partition: ""
     sleep: ''
     unmount: ''
-  path: ./lib/budik/config/sources.yml
+  path: ./lib/budik/config/templates/sources_example.yml
 tv: 
   available: false
   use_if_no_video: false

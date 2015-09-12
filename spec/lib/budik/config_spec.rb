@@ -12,7 +12,7 @@ describe Budik::Config, '#initialize' do
 
       expect(config.lang.lang.class).to eq R18n::TranslatedString
       expect(config.options).to eq YAML.load_file('./lib/budik/config/options.yml')
-      expect(config.sources).to eq YAML.load_file('./lib/budik/config/sources.yml')
+      expect(config.sources).to eq YAML.load_file(config.options['sources']['path'])
      end
   end
 end

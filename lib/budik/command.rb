@@ -1,43 +1,46 @@
 module Budik
-  def self.command_config(_args, opts)
-    _config = Config.instance.load(opts)
-  end
+  class Command
+    include Singleton
 
-  def self.command_run(_args, opts)
-    options = Config.instance.options
-    dl_options = options['sources']['download']
+    def config(_args, opts)
+    end
 
-    dl_options['keep'] = opts.download_keep if opts.download_keep
-    options['player']['player'] = opts.player if opts.player
-    options['rng']['method'] = opts.rng if opts.rng
+    def run(_args, opts)
+      options = Config.instance.options
+      dl_options = options['sources']['download']
 
-    sources = Sources.instance
-    rng = Rng.instance
-    devices = Devices.instance
-    player = Player.instance
+      dl_options['keep'] = opts.download_keep if opts.download_keep
+      options['player']['player'] = opts.player if opts.player
+      options['rng']['method'] = opts.rng if opts.rng
 
-    sources.parse(options['sources']['path'], opts.categories)
-    devices.storage_mount
-    number = opts.number ? opts.number : rng.generate(sources.count)
-    sources.download(number)
+      sources = Sources.instance
+      rng = Rng.instance
+      devices = Devices.instance
+      player = Player.instance
 
-    devices.tv_on
-    player.play(sources.sources[number])
-    devices.tv_off
-    sources.remove(number)
-    devices.storage_unmount
-    devices.storage_sleep
-  end
+      sources.parse(options['sources']['path'], opts.categories)
+      devices.storage_mount
+      number = opts.number ? opts.number : rng.generate(sources.count)
+      sources.download(number)
 
-  def self.command_set(_args, opts)
-  end
+      devices.tv_on
+      player.play(sources.sources[number])
+      devices.tv_off
+      sources.remove(number)
+      devices.storage_unmount
+      devices.storage_sleep
+    end
 
-  def self.command_sources(_args, opts)
-  end
+    def set(_args, opts)
+    end
 
-  def self.command_translate(_args, opts)
-  end
+    def sources(_args, opts)
+    end
 
-  def self.command_unset(_args, opts)
+    def translate(_args, opts)
+    end
+
+    def unset(_args, opts)
+    end
   end
 end

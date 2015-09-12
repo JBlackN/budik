@@ -3,7 +3,7 @@
 #require 'awesome_print'
 require 'commander'
 require 'fileutils'
-#require 'json'
+require 'json'
 require 'net/http'
 require 'open3'
 require 'r18n-core'
@@ -40,7 +40,7 @@ module Budik
         c.description = 'Open options file in your default editor.'
         c.option '-r', '--reset [string]', String, 'Resets configuration file to default values.'
         c.action do |_args, opts|
-          command_config(_args, opts)
+          Command.instance.config(_args, opts)
         end
       end
 
@@ -54,7 +54,7 @@ module Budik
         c.option '-p', '--player [string]', String, 'Override which player to use.'
         c.option '-r', '--rng [string]', String, 'Override random number generation method specified in your options.yml file. Possible values: "hwrng", "random.org", "rand-hwrng-seed", "rand". Default value: "hwrng".'
         c.action do |_args, opts|
-          command_run(_args, opts)
+          Command.instance.run(_args, opts)
         end
       end
 
@@ -63,7 +63,7 @@ module Budik
         c.summary = 'Set alarm.'
         c.description = 'Set alarm using systemd timers, cron or schtasks.'
         c.action do |_args, opts|
-          command_set(_args, opts)
+          Command.instance.set(_args, opts)
         end
       end
 
@@ -74,7 +74,7 @@ module Budik
         c.option '-l', '--list [string]', String, 'List sources. Can be restricted by categories. DEFAULT option. Usage: list "all|category.subcategory .exclude.this". Default: list "all"'
         c.option '-d', '--download [string]', String, 'Downloads source(s). Usage: download "all|number|{category: category, number: number}|path|name". Default: download "all".'
         c.action do |_args, opts|
-          command_sources(_args, opts)
+          Command.instance.sources(_args, opts)
         end
       end
 
@@ -85,7 +85,7 @@ module Budik
         c.summary = 'Translate app.'
         c.description = 'Opens your language file in your default editor.'
         c.action do |_args, opts|
-          command_translate(_args, opts)
+          Command.instance.translate(_args, opts)
         end
       end
 
@@ -94,7 +94,7 @@ module Budik
         c.summary = 'Unset alarm.'
         c.description = 'Unset alarm.'
         c.action do |_args, opts|
-          command_unset(_args, opts)
+          Command.instance.unset(_args, opts)
         end
       end
 
