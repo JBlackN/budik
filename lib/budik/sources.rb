@@ -36,7 +36,7 @@ module Budik
         item[:path].each do |path|
           id = YouTubeAddy.extract_video_id(path)
           if id
-            path = File.expand_path(dir + id + '.mp4')
+            path = File.expand_path(dir + id + '.mp4') # TODO: remove, doesn't work
             download_youtube(id, dir)
           end
         end

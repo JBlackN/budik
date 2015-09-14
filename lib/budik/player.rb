@@ -24,10 +24,10 @@ module Budik
 
     def omxplayer(source)
       source[:path].each do |item|
-        command = @player_options['path'] + ' --vol ' + @player_options['defaultVolume'].to_s + ' ' + item
+        command = @player_options['path'] + ' --vol ' + @player_options['default_volume'].to_s + ' ' + item
         Open3.popen3(command) do |i, o, e, t|
           7.times do
-            sleep(@player_options['volumeStepSecs'])
+            sleep(@player_options['volume_step_secs'])
             i.puts 'volup'
           end
           i.close
@@ -36,30 +36,34 @@ module Budik
     end
 
     def vlc(source)
-      vlc_path = @player_options['path'].gsub(' ', '\\ ')
-      rc = @player_options['rcHost'] + ':' + @player_options['rcPort'].to_s
-      command = vlc_path + ' --extraintf rc --rc-host ' + rc + ' --volume-step ' + @player_options['volumeStep'].to_s + (@player_options['fullscreen'] ? ' --fullscreen ' : ' ')
+      # TODO: is_url etc + vlc_path
+
+      vlc_path = '"' + @player_options['path'] + '"'#.gsub(' ', '\\ ')
+      rc = @player_options['rc_host'] + ':' + @player_options['rc_port'].to_s
+      command = vlc_path + ' --extraintf rc --rc-host ' + rc + ' --volume-step ' + @player_options['volume_step'].to_s + (@player_options['fullscreen'] ? ' --fullscreen ' : ' ')
 
       source[:path].each do |item|
+        is_url = (item =~ /\A#{URI::regexp(['http', 'https'])}\z/)
+        item = Config.instance.options['sources']['download']['dir'] + YouTubeAddy.extract_video_id(item) + '.mp4' if is_url
         command += ('"file:///' + item + '" ')
       end
       command += 'vlc://quit'
       vlc_pid = spawn(command)
-      sleep(@player_options['waitSecsAfterVlcRuns'])
+      sleep(@player_options['wait_secs_after_run'])
 
       while true do
         begin
-          rc = TCPSocket.open(@player_options['rcHost'], @player_options['rcPort'])
+          rc = TCPSocket.open(@player_options['rc_host'], @player_options['rc_port'])
           break
         rescue
           next
         end
       end
 
-      rc.puts 'volume ' + @player_options['defaultVolume'].to_s
+      rc.puts 'volume ' + @player_options['default_volume'].to_s
       (1..128).each do |i|
-        sleep(@player_options['volumeFadeInSecs'])
-        rc.puts 'volup ' + @player_options['volumeStep'].to_s
+        sleep(@player_options['volume_fadein_secs'])
+        rc.puts 'volup ' + @player_options['volume_step'].to_s
       end
 
       Process.wait(vlc_pid)

@@ -9,7 +9,7 @@ module Budik
       options = Config.instance.options
       dl_options = options['sources']['download']
 
-      dl_options['keep'] = opts.download_keep if opts.download_keep
+      dl_options['keep'] = opts.dl_keep if opts.dl_keep
       options['player']['player'] = opts.player if opts.player
       options['rng']['method'] = opts.rng if opts.rng
 
@@ -21,6 +21,8 @@ module Budik
       sources.parse(options['sources']['path'], opts.categories)
       devices.storage_mount
       number = opts.number ? opts.number : rng.generate(sources.count)
+
+      puts Output.instance.run_info_table(number, sources.sources[number][:name])
       sources.download(number)
 
       devices.tv_on

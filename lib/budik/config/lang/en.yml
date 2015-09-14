@@ -1,5 +1,33 @@
 lang: "en" # Do not remove this line.
-config:
-  example: "This is an example string."
+budik:
+  description: "Alarm clock which randomly plays a song or a video from YouTube or your local collection."
+  commands:
+    config:
+      summary: "Edit program configuration."
+      description: "Open options file in your default editor."
+      options:
+        reset: "Resets configuration file to default values."
+    run:
+      summary: "Runs alarm (default command)."
+      description: "Runs alarm with specified options. CLI options > options.yml."
+      options:
+        categories: "Limit selection by categories. Example usage: \"cat1.subcat1 cat2.subcat1.subsubcat1 .excludethis.subcat etc.\""
+        dl_keep: "Override download method set in your active options."
+        number: "Override selection using random number generator by specifying fixed number."
+        player: "Override which player to use."
+        rng: "Override random number generation method specified in your options.yml file. Possible values: \"hwrng\", \"random.org\", \"rand-hwrng-seed\", \"rand\". Default value: \"hwrng\"."
+    sources:
+      summary: "Manage source(s)."
+      description: "List or download source(s) or edit your sources file in your default editor (default: edit)."
+      options:
+        list: "List sources. Can be restricted by categories. DEFAULT option. Usage: list \"all|category.subcategory .exclude.this\". Default: list \"all\""
+        download: "Downloads source(s). Usage: download \"all|number\". Default: download \"all\"."
+    translate:
+      summary: "Translate app."
+      description: "Opens your language file in your default editor."
+output:
+  date: "DateTime"
+  number: "Number"
+  alarm: "Alarm"
 sources:
   invalid_item: "Item %1 is invalid."

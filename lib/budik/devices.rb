@@ -6,11 +6,13 @@ module Budik
       options = Config.instance.options
 
       tv_options = options['tv']
+      @tv = Hash.new
       if tv_options['available']
-        @tv = Hash.new
         @tv[:use_if_no_video] = tv_options['use_if_no_video']
         @tv[:wait_secs_after_on] = tv_options['wait_secs_after_on']
         @tv[:on] = false
+      else
+        @tv[:on] = nil
       end
 
       storage_options = options['sources']['download']
@@ -69,11 +71,10 @@ module Budik
     def tv_on
       unless @tv[:on] == nil || @tv[:on] == true
         system('echo "on 0" | cec-client -s')
+        sleep(@tv[:wait_secs_after_on]) unless @tv[:wait_secs_after_on] == nil
+        system('echo "as" | cec-client -s')
       end
       @tv[:on] = true
-
-      sleep(@tv[:wait_secs_after_on]) unless @tv[:wait_secs_after_on] == nil
-      system('echo "as" | cec-client -s')
     end
 
     def tv_off

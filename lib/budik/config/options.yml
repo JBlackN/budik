@@ -10,7 +10,7 @@ player:
   vlc: 
     default_volume: 128
     fullscreen: true
-    path: "C:/Users/Petr Schmied/Desktop/Portable Apps/VLCPortable/VLCPortable.exe"
+    path: "C:/Users/peter/Desktop/Portable Apps/VLCPortable/VLCPortable.exe"
     rc_host: localhost
     rc_port: 50000
     volume_fadein_secs: 0.125
@@ -20,7 +20,7 @@ player:
 rng: 
   hwrng: 
     source: ""
-  method: random.org
+  method: rand
   random.org: 
     apikey: 
 sources: 
@@ -28,12 +28,12 @@ sources:
   download: 
     device: ""
     dir: downloads/
-    keep: true
+    keep: false
     mount: ''
     partition: ""
     sleep: ''
     unmount: ''
-  path: ./lib/budik/config/templates/sources_example.yml
+  path: ./lib/budik/config/sources.yml
 tv: 
   available: false
   use_if_no_video: false
