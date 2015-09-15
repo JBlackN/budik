@@ -75,9 +75,14 @@ module Budik
       files = ''
       source[:path].each do |item|
         item_path = Sources.instance.locate_item(item).gsub(%r{^/}, '')
-        files += ('"file:///' + item_path + '" ')
+        files += (vlc_cmd_item_prefix(item_path) + item_path + '" ')
       end
       files += 'vlc://quit'
+    end
+
+    def vlc_cmd_item_prefix(item_path)
+      is_url = (item_path =~ /\A#{URI.regexp(%w(http https))}\z/)
+      is_url ? '"' : '"file:///'
     end
 
     def vlc_rc_connect

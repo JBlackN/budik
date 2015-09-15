@@ -34,6 +34,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'awesome_print'
   spec.add_dependency 'commander'
   spec.add_dependency 'r18n-core'
+  spec.add_dependency 'sys-uname'
   spec.add_dependency 'terminal-table'
   spec.add_dependency 'ya2yaml'
   spec.add_dependency 'youtube_addy'

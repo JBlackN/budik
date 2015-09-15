@@ -10,6 +10,7 @@ require 'open3'
 require 'r18n-core'
 require 'singleton'
 require 'socket'
+require 'sys/uname'
 require 'terminal-table'
 require 'uri'
 require 'ya2yaml'
@@ -85,7 +86,7 @@ module Budik
 
     def command_run_options(c, str_opts)
       c.option '-c', '--categories [string]', String, str_opts.categories
-      c.option '-d', '--dl-keep [string]', String, str_opts.dl_keep
+      c.option '-d', '--dl-method [string]', String, str_opts.dl_method
       c.option '-n', '--number [integer]', Integer, str_opts.number
       c.option '-p', '--player [string]', String, str_opts.player
       c.option '-r', '--rng [string]', String, str_opts.rng

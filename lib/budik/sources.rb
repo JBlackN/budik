@@ -5,12 +5,14 @@ module Budik
 
     def initialize
       @sources = []
-      @dir = Config.instance.options['sources']['download']['dir']
-      @keep = Config.instance.options['sources']['download']['keep']
+      dir = Config.instance.options['sources']['download']['dir']
+      @dir = File.expand_path(dir) + '/'
+      @method = Config.instance.options['sources']['download']['method']
     end
 
-    attr_accessor :sources, :dir, :keep
+    attr_accessor :sources, :dir, :method
 
+    # FIXME: music, youtube.music
     def apply_mods(mods)
       @sources.delete_if do |source|
         mods[:adds].all? { |mod| !(mod == (source[:category] & mod)) }
@@ -30,7 +32,6 @@ module Budik
         source[:path].each do |path|
           download_youtube(YouTubeAddy.extract_video_id(path))
         end
-        source
       else
         @sources.each { |src| download(src) }
       end
@@ -52,6 +53,7 @@ module Budik
     end
 
     def locate_item(item)
+      return item if @method == 'stream'
       is_url = (item =~ /\A#{URI.regexp(%w(http https))}\z/)
       is_url ? @dir + YouTubeAddy.extract_video_id(item) + '.mp4' : item
     end
@@ -113,12 +115,11 @@ module Budik
     end
 
     def remove(source = nil)
-      return if @keep
+      return unless @method == 'remove'
 
       if source
         source[:path].each do |path|
-          normalized_path = locate_item(path)
-          FileUtils.rm File.expand_path(normalized_path), force: true
+          FileUtils.rm File.expand_path(locate_item(path)), force: true
         end
       else
         @sources.each { |src| remove(src) }

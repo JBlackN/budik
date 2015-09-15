@@ -13,7 +13,7 @@ budik:
       description: "Runs alarm with specified options. CLI options > options.yml."
       options:
         categories: "Limit selection by categories. Example usage: \"cat1.subcat1 cat2.subcat1.subsubcat1 .excludethis.subcat etc.\""
-        dl_keep: "Override download method set in your active options."
+        dl_method: "Override download method set in your active options."
         number: "Override selection using random number generator by specifying fixed number."
         player: "Override which player to use."
         rng: "Override random number generation method specified in your options.yml file. Possible values: \"hwrng\", \"random.org\", \"rand-hwrng-seed\", \"rand\". Default value: \"hwrng\"."

@@ -1,40 +1,39 @@
---- 
+---
 os: windows
 lang: en
-player: 
-  omxplayer: 
+player:
+  omxplayer:
     default_volume: -2100
     path: omxplayer
     volume_step_secs: 3
   player: vlc
-  vlc: 
+  vlc:
     default_volume: 128
     fullscreen: true
-    path: "C:/Users/peter/Desktop/Portable Apps/VLCPortable/VLCPortable.exe"
+    path: vlc
     rc_host: localhost
     rc_port: 50000
     volume_fadein_secs: 0.125
     volume_step: 1.0
     wait_secs_after_run: 5
     wait_secs_if_http: 3
-rng: 
-  hwrng: 
+rng:
+  hwrng:
     source: ""
   method: rand
-  random.org: 
-    apikey: 
-sources: 
-  categories: all
-  download: 
+  random.org:
+    apikey: ""
+sources:
+  download:
     device: ""
-    dir: downloads/
-    keep: false
-    mount: ''
+    dir: ~/.budik/downloads/
+    method: stream
+    mount: ""
     partition: ""
-    sleep: ''
-    unmount: ''
-  path: ./lib/budik/config/sources.yml
-tv: 
+    sleep: ""
+    unmount: ""
+  path: ~/.budik/sources.yml
+tv:
   available: false
   use_if_no_video: false
   wait_secs_after_on: 0

@@ -3,6 +3,7 @@ module Budik
   class Command
     def initialize(command, opts)
       @options = Config.instance.options
+      @dl_method = @options['sources']['download']['method']
       @sources = Config.instance.sources
       @strings = Config.instance.lang.command
 
@@ -23,13 +24,15 @@ module Budik
 
       run_use_cli_opts(opts)
       source = run_prepare(opts, sources, devices, rng, output)
+      run_download(source, @options['sources']['download']['method'], sources)
       run_play(source, devices, player, sources)
     end
 
     def run_use_cli_opts(opts)
-      @options['sources']['download']['keep'] = opts.dl_keep if opts.dl_keep
       @options['player']['player'] = opts.player if opts.player
       @options['rng']['method'] = opts.rng if opts.rng
+      return unless opts.dl_method
+      @options['sources']['download']['method'] = opts.dl_method
     end
 
     def run_prepare(opts, sources, devices, rng, output)
@@ -42,7 +45,11 @@ module Budik
       source = sources.get(number)
 
       puts output.run_info_table(number, source[:name])
-      sources.download(source)
+      source
+    end
+
+    def run_download(source, dl_method, sources)
+      dl_method == 'stream' ? source : sources.download(source)
     end
 
     def run_play(source, devices, player, sources)

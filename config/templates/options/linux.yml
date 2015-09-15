@@ -1,0 +1,39 @@
+---
+os: linux
+lang: en
+player:
+  omxplayer:
+    default_volume: -2100
+    path: omxplayer
+    volume_step_secs: 3
+  player: vlc
+  vlc:
+    default_volume: 128
+    fullscreen: true
+    path: vlc
+    rc_host: localhost
+    rc_port: 50000
+    volume_fadein_secs: 0.125
+    volume_step: 1.0
+    wait_secs_after_run: 5
+    wait_secs_if_http: 3
+rng:
+  hwrng:
+    source: /dev/urandom
+  method: hwrng
+  random.org:
+    apikey: ""
+sources:
+  download:
+    device: ""
+    dir: ~/.budik/downloads/
+    method: stream
+    mount: ""
+    partition: ""
+    sleep: ""
+    unmount: ""
+  path: ~/.budik/sources.yml
+tv: 
+  available: false
+  use_if_no_video: false
+  wait_secs_after_on: 0
