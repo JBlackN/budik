@@ -1,4 +1,5 @@
 module Budik
+  # 'Output' class provides information to the user via console.
   class Output
     include Singleton
 
@@ -7,12 +8,13 @@ module Budik
     end
 
     def run_info_table(number, name)
-      rows = []
-      rows << [@strings.date, DateTime.now.strftime('%d/%m/%Y %H:%M')]
-      rows << [@strings.number, number.to_s]
-      rows << [@strings.alarm, name]
+      title = 'Budik - ' + DateTime.now.strftime('%d/%m/%Y %H:%M')
 
-      Terminal::Table.new title: 'Budik', rows: rows
+      rows = []
+      rows << [@strings.alarm, name]
+      rows << [@strings.number, number.to_s]
+
+      Terminal::Table.new title: title, rows: rows
     end
   end
 end

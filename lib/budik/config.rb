@@ -1,4 +1,5 @@
 module Budik
+  # 'Config' class loads and manages app configuration.
   class Config
     include Singleton
 
@@ -15,7 +16,7 @@ module Budik
     attr_accessor :options
     attr_accessor :sources
 
-    def edit(opts)
+    def edit(_opts)
       # TODO
     end
 

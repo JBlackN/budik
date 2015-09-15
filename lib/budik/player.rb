@@ -1,11 +1,12 @@
 module Budik
+  # 'Player' class handles communication between app and media players.
   class Player
     include Singleton
 
     def initialize
       player_options = Config.instance.options['player']
-
       @player = player_options['player']
+
       if @player == 'omxplayer'
         @player_options = player_options['omxplayer']
       else
@@ -13,7 +14,8 @@ module Budik
       end
     end
 
-    # TODO: source -> file path
+    attr_accessor :player_options
+
     def play(source)
       if @player == 'omxplayer'
         omxplayer(source)
@@ -24,8 +26,7 @@ module Budik
 
     def omxplayer(source)
       source[:path].each do |item|
-        command = @player_options['path'] + ' --vol ' + @player_options['default_volume'].to_s + ' ' + item
-        Open3.popen3(command) do |i, o, e, t|
+        Open3.popen3(omx_build_command(item)) do |i, _o, _e, _t|
           7.times do
             sleep(@player_options['volume_step_secs'])
             i.puts 'volup'
@@ -35,38 +36,69 @@ module Budik
       end
     end
 
+    def omx_build_command(item)
+      command = @player_options['path']
+      args = '--vol ' + @player_options['default_volume'].to_s
+      command + ' ' + args + ' ' + Sources.instance.locate_item(item)
+    end
+
     def vlc(source)
-      # TODO: is_url etc + vlc_path
-
-      vlc_path = '"' + @player_options['path'] + '"'#.gsub(' ', '\\ ')
-      rc = @player_options['rc_host'] + ':' + @player_options['rc_port'].to_s
-      command = vlc_path + ' --extraintf rc --rc-host ' + rc + ' --volume-step ' + @player_options['volume_step'].to_s + (@player_options['fullscreen'] ? ' --fullscreen ' : ' ')
-
-      source[:path].each do |item|
-        is_url = (item =~ /\A#{URI::regexp(['http', 'https'])}\z/)
-        item = Config.instance.options['sources']['download']['dir'] + YouTubeAddy.extract_video_id(item) + '.mp4' if is_url
-        command += ('"file:///' + item + '" ')
-      end
-      command += 'vlc://quit'
-      vlc_pid = spawn(command)
+      vlc_pid = spawn(vlc_build_command(source))
       sleep(@player_options['wait_secs_after_run'])
+      vlc_volume_control(vlc_rc_connect)
 
-      while true do
+      Process.wait(vlc_pid)
+    end
+
+    def vlc_build_command(source)
+      vlc_path = @player_options['path']
+      vlc_path.gsub!(/^/, '"').gsub!(/$/, '"') if vlc_path =~ /\s/
+
+      args = vlc_build_args
+      files = vlc_cmd_add_items(source)
+
+      vlc_path + args[:rc] + args[:volume] + args[:fullscreen] + files
+    end
+
+    def vlc_build_args
+      rc_host = @player_options['rc_host']
+      rc_port = @player_options['rc_port']
+      rc = ' --extraintf rc --rc-host ' + rc_host + ':' + rc_port.to_s
+
+      volume = ' --volume-step ' + @player_options['volume_step'].to_s
+      fullscreen = @player_options['fullscreen'] ? ' --fullscreen ' : ' '
+
+      { rc: rc, volume: volume, fullscreen: fullscreen }
+    end
+
+    def vlc_cmd_add_items(source)
+      files = ''
+      source[:path].each do |item|
+        item_path = Sources.instance.locate_item(item).gsub(%r{^/}, '')
+        files += ('"file:///' + item_path + '" ')
+      end
+      files += 'vlc://quit'
+    end
+
+    def vlc_rc_connect
+      rc_host = @player_options['rc_host']
+      rc_port = @player_options['rc_port']
+      loop do
         begin
-          rc = TCPSocket.open(@player_options['rc_host'], @player_options['rc_port'])
-          break
+          rc = TCPSocket.open(rc_host, rc_port)
+          return rc
         rescue
           next
         end
       end
+    end
 
+    def vlc_volume_control(rc)
       rc.puts 'volume ' + @player_options['default_volume'].to_s
-      (1..128).each do |i|
+      128.times do
         sleep(@player_options['volume_fadein_secs'])
         rc.puts 'volup ' + @player_options['volume_step'].to_s
       end
-
-      Process.wait(vlc_pid)
     end
   end
 end

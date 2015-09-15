@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-#require 'awesome_print'
+# require 'awesome_print'
 require 'commander'
 require 'date'
 require 'fileutils'
@@ -26,12 +26,20 @@ require './lib/budik/rng'
 require './lib/budik/sources'
 require './lib/budik/version'
 
+# 'Budik' is an alarm clock which randomly plays an item from your media
+# collection (local or YouTube).
 module Budik
+  # 'Budik' class is application's main entry point.
   class Budik
     include Commander::Methods
 
     def initialize
       @strings = Config.instance.lang.budik
+
+      @str_config = @strings.commands.config
+      @str_run = @strings.commands.run
+      @str_sources = @strings.commands.sources
+      @str_translate = @strings.commands.translate
     end
 
     def run
@@ -39,72 +47,70 @@ module Budik
       program :version, '0.0.1'
       program :description, @strings.description
 
+      commands
+
       default_command :run
-
-      command :config do |c|
-        str_config = @strings.commands.config
-        str_opts = @strings.commands.config.options
-
-        c.syntax = 'budik config [options]'
-        c.summary = str_config.summary
-        c.description = str_config.description
-        c.option '-r', '--reset [string]', String, str_opts.reset
-
-        c.action do |_args, opts|
-          Command.instance.config(_args, opts)
-        end
-      end
-
-      command :run do |c|
-        str_run = @strings.commands.run
-        str_opts = @strings.commands.run.options
-
-        c.syntax = 'budik run [options]'
-        c.summary = str_run.summary
-        c.description = str_run.description
-        c.option '-c', '--categories [string]', String, str_opts.categories
-        c.option '-d', '--dl-keep [string]', String, str_opts.dl_keep
-        c.option '-n', '--number [integer]', Integer, str_opts.number
-        c.option '-p', '--player [string]', String, str_opts.player
-        c.option '-r', '--rng [string]', String, str_opts.rng
-
-        c.action do |_args, opts|
-          Command.instance.run(_args, opts)
-        end
-      end
-
-      command :sources do |c|
-        str_sources = @strings.commands.sources
-        str_opts = @strings.commands.sources.options
-
-        c.syntax = 'budik sources [options]'
-        c.summary = str_sources.summary
-        c.description = str_sources.description
-        c.option '-l', '--list [string]', String, str_opts.list
-        c.option '-d', '--download [string]', String, str_opts.download
-
-        c.action do |_args, opts|
-          Command.instance.sources(_args, opts)
-        end
-      end
-
-      alias_command :test, :'run', '--trace'
-
-      command :translate do |c|
-        str_translate = @strings.commands.translate
-
-        c.syntax = 'budik translate [options]'
-        c.summary = str_translate.summary
-        c.description = str_translate.description
-
-        c.action do |_args, opts|
-          Command.instance.translate(_args, opts)
-        end
-      end
 
       run!
     end
+
+    private
+
+    def commands
+      command_config(@str_config.options)
+      command_run(@str_run.options)
+      command_sources(@str_sources.options)
+      command_translate
+    end
+
+    def command_config(str_opts)
+      command :config do |c|
+        c.syntax = 'budik config [options]'
+        c.summary = @str_config.summary
+        c.description = @str_config.description
+        c.option '-r', '--reset [string]', String, str_opts.reset
+        c.action { |_args, opts| Command.new(:config, opts) }
+      end
+    end
+
+    def command_run(str_opts)
+      command :run do |c|
+        c.syntax = 'budik run [options]'
+        c.summary = @str_run.summary
+        c.description = @str_run.description
+        command_run_options(c, str_opts)
+        c.action { |_args, opts| Command.new(:run, opts) }
+      end
+    end
+
+    def command_run_options(c, str_opts)
+      c.option '-c', '--categories [string]', String, str_opts.categories
+      c.option '-d', '--dl-keep [string]', String, str_opts.dl_keep
+      c.option '-n', '--number [integer]', Integer, str_opts.number
+      c.option '-p', '--player [string]', String, str_opts.player
+      c.option '-r', '--rng [string]', String, str_opts.rng
+    end
+
+    def command_sources(str_opts)
+      command :sources do |c|
+        c.syntax = 'budik sources [options]'
+        c.summary = @str_sources.summary
+        c.description = @str_sources.description
+        c.option '-l', '--list [string]', String, str_opts.list
+        c.option '-d', '--download [string]', String, str_opts.download
+        c.action { |_args, opts| Command.new(:sources, opts) }
+      end
+    end
+
+    def command_translate
+      command :translate do |c|
+        c.syntax = 'budik translate [options]'
+        c.summary = @str_translate.summary
+        c.description = @str_translate.description
+        c.action { |_args, opts| Command.new(:translate, opts) }
+      end
+    end
   end
 
-  Budik.new.run if $0 == __FILE__
+  Budik.new.run if $PROGRAM_NAME == __FILE__
 end

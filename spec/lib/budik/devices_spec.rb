@@ -20,3 +20,18 @@ describe Budik::Devices, '#initialize' do
     expect(devices.storage[:sleep_command]).to eq sleep_command
   end
 end
+
+describe Budik::Devices, '#storage_parse_cmd' do
+  it 'correctly parses commands' do
+    devices = Budik::Devices.instance
+
+    cmd = 'mount'
+    template = 'udisksctl mount -b $partition'
+    subst = { '$partition': '/dev/sda1' }
+    devices.storage_parse_cmd(cmd, template, subst, mount: true)
+
+    parsed_cmd = 'udisksctl mount -b /dev/sda1'
+    expect(devices.storage[:mount_command]).to eq parsed_cmd
+    expect(devices.storage[:mount]).to eq true
+  end
+end

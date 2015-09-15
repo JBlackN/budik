@@ -7,6 +7,7 @@ budik:
       description: "Open options file in your default editor."
       options:
         reset: "Resets configuration file to default values."
+    invalid: "Invalid command."
     run:
       summary: "Runs alarm (default command)."
       description: "Runs alarm with specified options. CLI options > options.yml."
