@@ -12,13 +12,13 @@ module Budik
 
     attr_accessor :sources, :dir, :method
 
-    def download(source = nil)
+    def download_sources(source = nil)
       if source
         source[:path].each do |path|
           download_youtube(YouTubeAddy.extract_video_id(path))
         end
       else
-        @sources.each { |src| download(src) }
+        @sources.each { |src| download_sources(src) }
       end
     end
 

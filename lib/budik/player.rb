@@ -14,7 +14,7 @@ module Budik
       end
     end
 
-    attr_accessor :player_options
+    attr_accessor :player, :player_options
 
     def play(source)
       if @player == 'omxplayer'

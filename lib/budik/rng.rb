@@ -6,6 +6,8 @@ module Budik
       @method = @options['method']
     end
 
+    attr_accessor :options, :method
+
     def generate(items)
       case @method
       when 'hwrng'

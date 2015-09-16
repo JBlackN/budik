@@ -12,8 +12,7 @@ module Budik
       storage_load(options['sources']['download'])
     end
 
-    attr_reader :storage
-    attr_reader :tv
+    attr_accessor :storage, :tv
 
     def storage_load(options)
       @storage[:device] = options['device']
@@ -47,7 +46,8 @@ module Budik
     end
 
     def storage_unmount
-      unless @storage[:mounted].nil? || @storage[:mounted] == false
+      unmount = !@storage[:unmount]
+      unless unmount || @storage[:mounted].nil? || @storage[:mounted] == false
         system(@storage[:unmount_command])
       end
 

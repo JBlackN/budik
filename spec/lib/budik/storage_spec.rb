@@ -4,7 +4,7 @@ Budik::Config.instance
 sources = Budik::Sources.instance
 storage = Budik::Storage.instance
 
-describe Budik::Storage, '#download' do # TODO: rewrite
+describe Budik::Storage, '#download_sources' do # TODO: rewrite
   context 'using specified source' do
     it 'downloads an item' do
       sources_example = [
@@ -19,11 +19,11 @@ describe Budik::Storage, '#download' do # TODO: rewrite
       ]
       sources.sources = storage.sources = sources_example
 
-      storage.download(sources.get(0))
+      storage.download_sources(sources.get(0))
       expect(File.file? storage.dir + 'ghxo4OMh1YU.mp4').to eq true
       FileUtils.rm storage.dir + 'ghxo4OMh1YU.mp4', force: true
 
-      storage.download(sources.get(1))
+      storage.download_sources(sources.get(1))
       expect(File.file? storage.dir + 'tPEE9ZwTmy0.mp4').to eq true
       expect(File.file? storage.dir + 'wGyUP4AlZ6I.mp4').to eq true
       FileUtils.rm storage.dir + 'tPEE9ZwTmy0.mp4', force: true
@@ -33,7 +33,7 @@ describe Budik::Storage, '#download' do # TODO: rewrite
 
   context 'by default' do
     it 'downloads all items' do
-      storage.download
+      storage.download_sources
 
       expect(File.file? storage.dir + 'ghxo4OMh1YU.mp4').to eq true
       expect(File.file? storage.dir + 'tPEE9ZwTmy0.mp4').to eq true
@@ -79,7 +79,7 @@ describe Budik::Sources, '#locate_item' do
   end
 end
 
-describe Budik::Sources, '#remove' do
+describe Budik::Sources, '#remove_sources' do
   context 'using specified number' do
     it 'removes downloaded file' do
       storage.method = 'remove'

@@ -24,8 +24,15 @@ module Budik
       rpi?(os) ? :rpi : os
     end
 
-    def edit(_opts)
-      # TODO
+    def edit
+      options_path = File.expand_path('~/.budik/options.yml')
+
+      if @options['os'] == 'windows'
+        system('@powershell -Command "' + options_path + '"')
+      else
+        editor = ENV['EDITOR'] ? ENV['EDITOR'] : 'vi'
+        system(editor + ' "' + options_path + '"')
+      end
     end
 
     def install
@@ -48,7 +55,8 @@ module Budik
     end
 
     def reset
-      # TODO
+      options = './config/templates/options/' + platform?.to_s + '.yml'
+      FileUtils.cp(options, Dir.home + '/.budik/options.yml')
     end
 
     def rpi?(os)

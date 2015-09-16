@@ -12,7 +12,12 @@ module Budik
 
     private
 
-    def config(_opts)
+    def config(opts)
+      if opts.reset
+        Config.instance.reset
+      else
+        Config.instance.edit
+      end
     end
 
     def run(opts)
@@ -50,7 +55,7 @@ module Budik
     end
 
     def run_download(source, dl_method, storage)
-      dl_method == 'stream' ? source : storage.download(source)
+      dl_method == 'stream' ? source : storage.download_sources(source)
     end
 
     def run_play(source, devices, player, storage)
