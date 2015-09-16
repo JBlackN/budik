@@ -37,7 +37,6 @@ describe Budik::Player, '#vlc' do
 
     source = { path: %w(path1 path2) }
     cmd = player.vlc_build_command(source)
-    player.player_options['path'].gsub!(/^"/, '').gsub!(/"$/, '')
 
     expect(player).to receive(:spawn).with(cmd)
     allow(player).to receive(:vlc_volume_control) {}

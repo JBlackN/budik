@@ -51,8 +51,8 @@ module Budik
     end
 
     def vlc_build_command(source)
-      vlc_path = @player_options['path']
-      vlc_path.gsub!(/^/, '"').gsub!(/$/, '"') if vlc_path =~ /\s/
+      vlc_path = Marshal.load(Marshal.dump(@player_options['path']))
+      vlc_path.gsub!(/(^|$)/, '"') if vlc_path =~ /\s/
 
       args = vlc_build_args
       files = vlc_cmd_add_items(source)
