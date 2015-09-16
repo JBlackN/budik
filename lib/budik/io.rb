@@ -1,6 +1,6 @@
 module Budik
   # 'Output' class provides information to the user via console.
-  class Output
+  class IO
     include Singleton
 
     def initialize

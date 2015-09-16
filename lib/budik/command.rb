@@ -17,15 +17,16 @@ module Budik
 
     def run(opts)
       sources = Sources.instance
+      storage = Storage.instance
       devices = Devices.instance
       rng = Rng.new
-      output = Output.instance
+      io = IO.instance
       player = Player.instance
 
       run_use_cli_opts(opts)
-      source = run_prepare(opts, sources, devices, rng, output)
-      run_download(source, @options['sources']['download']['method'], sources)
-      run_play(source, devices, player, sources)
+      source = run_prepare(opts, sources, devices, rng, io)
+      run_download(source, storage.method, storage)
+      run_play(source, devices, player, storage)
     end
 
     def run_use_cli_opts(opts)
@@ -35,7 +36,7 @@ module Budik
       @options['sources']['download']['method'] = opts.dl_method
     end
 
-    def run_prepare(opts, sources, devices, rng, output)
+    def run_prepare(opts, sources, devices, rng, io)
       sources.parse(@sources)
       mods = opts.categories ? sources.parse_mods(opts.categories) : nil
       sources.apply_mods(mods) if mods
@@ -44,20 +45,20 @@ module Budik
       number = opts.number || rng.generate(sources.count)
       source = sources.get(number)
 
-      puts output.run_info_table(number, source[:name])
+      puts io.run_info_table(number, source[:name])
       source
     end
 
-    def run_download(source, dl_method, sources)
-      dl_method == 'stream' ? source : sources.download(source)
+    def run_download(source, dl_method, storage)
+      dl_method == 'stream' ? source : storage.download(source)
     end
 
-    def run_play(source, devices, player, sources)
+    def run_play(source, devices, player, storage)
       devices.tv_on
       player.play(source)
 
       devices.tv_off
-      sources.remove(source)
+      storage.remove_sources(source)
       devices.storage_unmount
       devices.storage_sleep
     end

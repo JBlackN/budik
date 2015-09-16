@@ -21,10 +21,11 @@ require 'youtube-dl.rb'
 require './lib/budik/command'
 require './lib/budik/config'
 require './lib/budik/devices'
-require './lib/budik/output'
+require './lib/budik/io'
 require './lib/budik/player'
 require './lib/budik/rng'
 require './lib/budik/sources'
+require './lib/budik/storage'
 require './lib/budik/version'
 
 # 'Budik' is an alarm clock which randomly plays an item from your media

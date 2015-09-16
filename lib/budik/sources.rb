@@ -1,16 +1,13 @@
 module Budik
-  # 'Sources' class loads, parses and manages media sources/items.
+  # 'Sources' class loads and parses media sources file.
   class Sources
     include Singleton
 
     def initialize
       @sources = []
-      dir = Config.instance.options['sources']['download']['dir']
-      @dir = File.expand_path(dir) + '/'
-      @method = Config.instance.options['sources']['download']['method']
     end
 
-    attr_accessor :sources, :dir, :method
+    attr_accessor :sources
 
     def apply_mods(mods)
       @sources.keep_if do |source|
@@ -35,35 +32,8 @@ module Budik
       @sources.length
     end
 
-    def download(source = nil)
-      if source
-        source[:path].each do |path|
-          download_youtube(YouTubeAddy.extract_video_id(path))
-        end
-      else
-        @sources.each { |src| download(src) }
-      end
-    end
-
-    def download_youtube(id)
-      return unless id && !File.file?(@dir + id + '.mp4')
-
-      # TODO: Update youtube-dl if fail
-      # TODO: username + password
-      options = { output: @dir + '%(id)s.%(ext)s',
-                  format: 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4',
-                  playlist: false }
-      YoutubeDL.download id, options
-    end
-
     def get(number)
       @sources[number]
-    end
-
-    def locate_item(item)
-      return item if @method == 'stream'
-      is_url = (item =~ /\A#{URI.regexp(%w(http https))}\z/)
-      is_url ? @dir + YouTubeAddy.extract_video_id(item) + '.mp4' : item
     end
 
     def normalize(item, category)
@@ -120,18 +90,6 @@ module Budik
       end
 
       parsed_mods
-    end
-
-    def remove(source = nil)
-      return unless @method == 'remove'
-
-      if source
-        source[:path].each do |path|
-          FileUtils.rm File.expand_path(locate_item(path)), force: true
-        end
-      else
-        @sources.each { |src| remove(src) }
-      end
     end
   end
 end

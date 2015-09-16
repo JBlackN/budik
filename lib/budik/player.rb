@@ -39,7 +39,7 @@ module Budik
     def omx_build_command(item)
       command = @player_options['path']
       args = '--vol ' + @player_options['default_volume'].to_s
-      command + ' ' + args + ' ' + Sources.instance.locate_item(item)
+      command + ' ' + args + ' ' + Storage.instance.locate_item(item)
     end
 
     def vlc(source)
@@ -74,7 +74,7 @@ module Budik
     def vlc_cmd_add_items(source)
       files = ''
       source[:path].each do |item|
-        item_path = Sources.instance.locate_item(item).gsub(%r{^/}, '')
+        item_path = Storage.instance.locate_item(item).gsub(%r{^/}, '')
         files += (vlc_cmd_item_prefix(item_path) + item_path + '" ')
       end
       files += 'vlc://quit'
