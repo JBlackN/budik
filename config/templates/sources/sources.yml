@@ -21,3 +21,8 @@ category2:
       - "path3"
   subcategory2:
     - "path4"
+category:
+  - "path"
+another_category:
+  category:
+    - "path2"

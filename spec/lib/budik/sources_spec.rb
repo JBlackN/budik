@@ -5,14 +5,15 @@ sources = Budik::Sources.instance
 sources_path = './config/templates/sources/sources.yml'
 
 describe Budik::Sources, '#apply_mods' do
-  it 'filters sources by applying modifiers' do
+  it 'correctly filters sources by applying modifiers' do
     sources.sources = []
     sources.parse(YAML.load_file(sources_path))
 
     mods = {
       adds: [
         %w(category1 subcategory2),
-        %w(category2 subcategory1)
+        %w(category2 subcategory1),
+        ['category']
       ],
       rms: [
         %w(category2 subcategory1 subsubcategory1)
@@ -27,7 +28,11 @@ describe Budik::Sources, '#apply_mods' do
 
       { name: 'path3',
         category: %w(category2 subcategory1 subsubcategory2),
-        path: ['path3'] }
+        path: ['path3'] },
+
+      { name: 'path',
+        category: ['category'],
+        path: ['path'] }
     ]
     expect(sources.sources).to eq sources_expected_result
   end
@@ -166,7 +171,15 @@ describe Budik::Sources, '#parse' do
 
         { name: 'path4',
           category: %w(category2 subcategory2),
-          path: ['path4'] }
+          path: ['path4'] },
+
+        { name: 'path',
+          category: ['category'],
+          path: ['path'] },
+
+        { name: 'path2',
+          category: %w(another_category category),
+          path: ['path2'] }
       ]
 
       expect(sources.sources).to eq sources_expected_result

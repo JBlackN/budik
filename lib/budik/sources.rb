@@ -12,15 +12,23 @@ module Budik
 
     attr_accessor :sources, :dir, :method
 
-    # FIXME: music, youtube.music
     def apply_mods(mods)
-      @sources.delete_if do |source|
-        mods[:adds].all? { |mod| !(mod == (source[:category] & mod)) }
+      @sources.keep_if do |source|
+        mods[:adds].any? { |mod| apply_mods_check(source[:category], mod) }
       end
 
-      mods[:rms].each do |mod|
-        @sources.delete_if { |source| mod == (source[:category] & mod) }
+      @sources.delete_if do |source|
+        mods[:rms].any? { |mod| apply_mods_check(source[:category], mod) }
       end
+    end
+
+    def apply_mods_check(category, mod)
+      mod_len = mod.length - 1
+      cat_len = category.length - 1
+      len = mod_len <= cat_len ? mod_len : cat_len
+
+      map = category[0..len].zip(mod[0..len]).map { |c, m| c == m }
+      !map.include? false
     end
 
     def count
