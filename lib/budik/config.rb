@@ -4,7 +4,7 @@ module Budik
     include Singleton
 
     def initialize
-      install unless installed?
+      install(Dir.home + '/.budik/') unless installed?
 
       @options = YAML.load_file(Dir.home + '/.budik/options.yml')
       @sources = YAML.load_file(File.expand_path(@options['sources']['path']))
@@ -19,11 +19,6 @@ module Budik
 
     attr_accessor :lang, :options, :sources
 
-    def platform?
-      os = Sys::Platform.linux? ? :linux : :windows
-      rpi?(os) ? :rpi : os
-    end
-
     def edit
       options_path = File.expand_path('~/.budik/options.yml')
 
@@ -35,23 +30,24 @@ module Budik
       end
     end
 
-    def install
-      dir = Dir.home + '/.budik/'
-      lang_dir = dir + 'lang/'
-      download_dir = dir + 'downloads/'
-
+    def install(dir)
       options = './config/templates/options/' + platform?.to_s + '.yml'
       sources = './config/templates/sources/sources.yml'
       lang = './config/templates/lang/en.yml'
 
-      FileUtils.mkdir_p([dir, lang_dir, download_dir])
+      FileUtils.mkdir_p([dir, dir + 'lang/', dir + 'downloads/'])
       FileUtils.cp options, dir + 'options.yml'
-      FileUtils.cp sources, dir
-      FileUtils.cp lang, lang_dir
+      FileUtils.cp sources, dir unless File.file? dir + sources
+      FileUtils.cp lang, dir + 'lang/'
     end
 
     def installed?
       File.file?(Dir.home + '/.budik/options.yml')
+    end
+
+    def platform?
+      os = Sys::Platform.linux? ? :linux : :windows
+      rpi?(os) ? :rpi : os
     end
 
     def reset

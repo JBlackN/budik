@@ -7,11 +7,16 @@ describe Budik::Player, '#omxplayer' do
   it 'plays a source using omxplayer' do
     player.player = 'omxplayer'
     player.player_options = options['omxplayer']
+    player.player_options['volume_step_secs'] = 0
     cmd1 = player.omx_build_command('path1')
     cmd2 = player.omx_build_command('path2')
 
-    expect(Open3).to receive(:popen3).with(cmd1).ordered
-    expect(Open3).to receive(:popen3).with(cmd2).ordered
+    i = o = e = t = double
+    expect(Open3).to receive(:popen3).with(cmd1).and_yield(i, o, e, t).ordered
+    expect(player).to receive(:omx_volume_control).with(i).ordered
+    expect(Open3).to receive(:popen3).with(cmd2).and_yield(i, o, e, t).ordered
+    expect(player).not_to receive(:omx_volume_control).with(i).ordered
+
     player.omxplayer(path: %w(path1 path2))
   end
 end
@@ -26,6 +31,15 @@ describe Budik::Player, '#omx_build_command' do
 
     cmd = 'omxplayer --vol -2100 /tmp/test.mp4'
     expect(player.omx_build_command(item)).to eq cmd
+  end
+end
+
+describe Budik::Player, '#omx_volume_control' do
+  it 'incrementally increases volume' do
+    i = double(puts: nil, close: nil)
+    expect(i).to receive(:puts).exactly(7).times.ordered
+    expect(i).to receive(:close).ordered
+    player.omx_volume_control(i)
   end
 end
 
@@ -61,6 +75,16 @@ describe Budik::Player, '#vlc_build_command' do
       ' --rc-host localhost:50000 --volume-step 1.0 --fullscreen'\
       ' "file:///tmp/test1.mp4" "file:///tmp/test2.mp4" vlc://quit'
     expect(player.vlc_build_command(source)).to eq cmd
+  end
+end
+
+describe Budik::Player, '#vlc_rc_connect' do
+  it "attempts connection to VLC's remote control interface" do
+    host = player.player_options['rc_host'] = 'localhost'
+    port = player.player_options['rc_port'] = 50_000
+    expect(player).to receive(:loop).and_yield
+    expect(TCPSocket).to receive(:open).with(host, port)
+    player.vlc_rc_connect
   end
 end
 

@@ -79,3 +79,18 @@ describe Budik::Rng, '#generate' do
     end
   end
 end
+
+describe Budik::Rng, '#random_org_request' do
+  it 'sends a request to Random.org API' do
+    options['random.org']['apikey'] = 'ffffffff-ffff-ffff-ffff-ffffffffffff'
+    response = rng.send(:random_org_request, options['random.org'], 100)
+    code = response.code.to_i
+    body = JSON.parse(response.body)
+    err_code = body['error']['code']
+    err_msg = body['error']['message']
+
+    expect(code).to eq 200
+    expect(err_code).to eq 400
+    expect(err_msg).to eq 'The API key you specified does not exist'
+  end
+end

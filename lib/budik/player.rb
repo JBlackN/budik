@@ -25,13 +25,9 @@ module Budik
     end
 
     def omxplayer(source)
-      source[:path].each do |item|
+      source[:path].each_with_index do |item, index|
         Open3.popen3(omx_build_command(item)) do |i, _o, _e, _t|
-          7.times do
-            sleep(@player_options['volume_step_secs'])
-            i.puts 'volup'
-          end
-          i.close
+          omx_volume_control(i) if index == 0
         end
       end
     end
@@ -40,6 +36,14 @@ module Budik
       command = @player_options['path']
       args = '--vol ' + @player_options['default_volume'].to_s
       command + ' ' + args + ' ' + Storage.instance.locate_item(item)
+    end
+
+    def omx_volume_control(i)
+      7.times do
+        sleep(@player_options['volume_step_secs'])
+        i.puts 'volup'
+      end
+      i.close
     end
 
     def vlc(source)
