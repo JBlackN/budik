@@ -21,13 +21,7 @@ module Budik
 
     def edit
       options_path = File.expand_path('~/.budik/options.yml')
-
-      if @options['os'] == 'windows'
-        system('@powershell -Command "' + options_path + '"')
-      else
-        editor = ENV['EDITOR'] ? ENV['EDITOR'] : 'vi'
-        system(editor + ' "' + options_path + '"')
-      end
+      open_file(options_path)
     end
 
     def install(dir)
@@ -43,6 +37,15 @@ module Budik
 
     def installed?
       File.file?(Dir.home + '/.budik/options.yml')
+    end
+
+    def open_file(file)
+      if @options['os'] == 'windows'
+        system('@powershell -Command "' + file + '"')
+      else
+        editor = ENV['EDITOR'] ? ENV['EDITOR'] : 'vi'
+        system(editor + ' "' + file + '"')
+      end
     end
 
     def platform?
@@ -62,6 +65,13 @@ module Budik
       hardware =~ /BCM270[89]/
     rescue
       false
+    end
+
+    def translate(lang)
+      template = './config/templates/lang/en.yml'
+      new_lang = Dir.home + '/.budik/lang/' + lang + '.yml'
+      FileUtils.cp template, new_lang
+      open_file(new_lang)
     end
   end
 end

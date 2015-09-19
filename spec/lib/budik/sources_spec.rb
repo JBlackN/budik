@@ -2,12 +2,14 @@ require 'spec_helper'
 
 Budik::Config.instance
 sources = Budik::Sources.instance
-sources_path = './config/templates/sources/sources.yml'
+sources_file = File.read('./config/templates/sources/sources.yml')
+sources_file.gsub!(/# Syntax:/, '').gsub!(/# =======/, '')
+sources_file.gsub!(/# /, '').gsub!(/#/, '')
 
 describe Budik::Sources, '#apply_mods' do
   it 'correctly filters sources by applying modifiers' do
     sources.sources = []
-    sources.parse(YAML.load_file(sources_path))
+    sources.parse(YAML.load(sources_file))
 
     mods = {
       adds: [
@@ -57,11 +59,15 @@ end
 describe Budik::Sources, '#parse' do
   context 'without modifiers' do
     it 'parses sources to program usable format' do
-      sources_example = YAML.load_file(sources_path)
+      sources_example = YAML.load(sources_file)
       sources.sources = []
       sources.parse(sources_example)
 
       sources_expected_result = [
+        { name: 'https://www.youtube.com/watch?v=oHg5SJYRHA0',
+          category: ['default'],
+          path: ['https://www.youtube.com/watch?v=oHg5SJYRHA0'] },
+
         { name: 'path',
           category: %w(category1 subcategory1),
           path: ['path'] },

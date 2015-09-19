@@ -1,28 +1,34 @@
 ---
-category1:
-  subcategory1:
-    - "path"
-    -
-      - "path1"
-      - "path2"
-    - name:
-      - "path"
-    - name:
-      - "path1"
-      - "path2"
-  subcategory2:
-    - "path"
-category2:
-  subcategory1:
-    subsubcategory1:
-      - "path1"
-      - "path2"
-    subsubcategory2:
-      - "path3"
-  subcategory2:
-    - "path4"
-category:
-  - "path"
-another_category:
-  category:
-    - "path2"
+default:
+  - "https://www.youtube.com/watch?v=oHg5SJYRHA0"
+#
+# Syntax:
+# =======
+#
+# category1:
+#   subcategory1:
+#     - "path"
+#     -
+#       - "path1"
+#       - "path2"
+#     - name:
+#       - "path"
+#     - name:
+#       - "path1"
+#       - "path2"
+#   subcategory2:
+#     - "path"
+# category2:
+#   subcategory1:
+#     subsubcategory1:
+#       - "path1"
+#       - "path2"
+#     subsubcategory2:
+#       - "path3"
+#   subcategory2:
+#     - "path4"
+# category:
+#   - "path"
+# another_category:
+#   category:
+#     - "path2"

@@ -27,12 +27,12 @@ sources:
   download: 
     device: /dev/sda
     dir: /mnt/.budik/downloads/
-    method: keep
+    method: remove
     mount: "udisksctl mount -b $partition"
     partition: /dev/sda1
-    sleep: ""
+    sleep: "sudo hdparm -y /dev/sda1"
     unmount: "udisksctl unmount -b $partition"
-  path: sources.yml
+  path: ~/.budik/sources.yml
 tv: 
   available: true
   use_if_no_video: true

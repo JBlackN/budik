@@ -3,7 +3,6 @@ module Budik
   class Command
     def initialize(command, opts)
       @options = Config.instance.options
-      @dl_method = @options['sources']['download']['method']
       @sources = Config.instance.sources
       @strings = Config.instance.lang.command
 
@@ -21,6 +20,12 @@ module Budik
     end
 
     def run(opts)
+      run_alarm(opts)
+    rescue
+      run_alarm_fallback
+    end
+
+    def run_alarm(opts)
       sources = Sources.instance
       storage = Storage.instance
       devices = Devices.instance
@@ -32,6 +37,13 @@ module Budik
       source = run_prepare(opts, sources, devices, rng, io)
       run_download(source, storage.method, storage)
       run_play(source, devices, player, storage)
+    end
+
+    def run_alarm_fallback
+      50.times do
+        puts "\a"
+        sleep 1.2
+      end
     end
 
     def run_use_cli_opts(opts)
@@ -60,7 +72,10 @@ module Budik
 
     def run_play(source, devices, player, storage)
       devices.tv_on
+
+      start = Time.now
       player.play(source)
+      run_alarm_fallback if Time.now - start < 5.0
 
       devices.tv_off
       storage.remove_sources(source)
@@ -68,10 +83,30 @@ module Budik
       devices.storage_sleep
     end
 
-    def sources(_opts)
+    def sources(opts)
+      if opts.edit
+        path = File.expand_path(Config.instance.options['sources']['path'])
+        Config.instance.open_file(path)
+      else
+        sources = Sources.instance
+        sources.parse(@sources)
+        sources_list_dl(sources, opts)
+      end
     end
 
-    def translate(_opts)
+    def sources_list_dl(sources, opts)
+      mods = opts.categories ? sources.parse_mods(opts.categories) : nil
+      sources.apply_mods(mods) if mods
+
+      if opts.download
+        Storage.instance.download_sources
+      else
+        IO.instance.sources_print(sources.sources)
+      end
+    end
+
+    def translate(args)
+      Config.instance.translate(args.first)
     end
   end
 end

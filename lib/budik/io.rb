@@ -16,5 +16,11 @@ module Budik
 
       Terminal::Table.new title: title, rows: rows
     end
+
+    def sources_print(sources)
+      sources.each_with_index do |source, index|
+        puts '[' + index.to_s.light_white + '] ' + source[:name].yellow
+      end
+    end
   end
 end

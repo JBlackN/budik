@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-# require 'awesome_print'
+require 'colorize'
 require 'commander'
 require 'date'
 require 'fileutils'
@@ -70,7 +70,7 @@ module Budik
         c.syntax = 'budik config [options]'
         c.summary = @str_config.summary
         c.description = @str_config.description
-        c.option '-r', '--reset [string]', String, str_opts.reset
+        c.option '-r', '--reset', str_opts.reset
         c.action { |_args, opts| Command.new(:config, opts) }
       end
     end
@@ -98,8 +98,9 @@ module Budik
         c.syntax = 'budik sources [options]'
         c.summary = @str_sources.summary
         c.description = @str_sources.description
-        c.option '-l', '--list [string]', String, str_opts.list
-        c.option '-d', '--download [string]', String, str_opts.download
+        c.option '-c', '--categories [string]', String, str_opts.categories
+        c.option '-d', '--download', str_opts.download
+        c.option '-e', '--edit', str_opts.download
         c.action { |_args, opts| Command.new(:sources, opts) }
       end
     end
@@ -109,7 +110,7 @@ module Budik
         c.syntax = 'budik translate [options]'
         c.summary = @str_translate.summary
         c.description = @str_translate.description
-        c.action { |_args, opts| Command.new(:translate, opts) }
+        c.action { |args, _opts| Command.new(:translate, args) }
       end
     end
   end

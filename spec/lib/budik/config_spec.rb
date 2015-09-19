@@ -16,32 +16,39 @@ describe Budik::Config, '#initialize' do
 end
 
 describe Budik::Config, '#edit' do
+  it 'opens configuration file for editing' do
+    expect(config).to receive(:open_file).with(options)
+    config.edit
+  end
+end
+
+describe Budik::Config, '#open_file' do
   context 'under Windows' do
-    it 'opens configuration file using default editor via Powershell' do
+    it 'opens file using default editor via Powershell' do
       config.options['os'] = 'windows'
-      command = '@powershell -Command "' + options + '"'
+      command = '@powershell -Command "file"'
       expect(config).to receive(:system).with(command)
-      config.edit
+      config.open_file('file')
     end
   end
 
   context 'under *nix' do
-    it 'uses $EDITOR environment variable to open configuration file' do
+    it 'uses $EDITOR environment variable to open file' do
       config.options['os'] = 'linux'
       ENV['EDITOR'] = '/usr/bin/nano'
-      command = '/usr/bin/nano "' + options + '"'
+      command = '/usr/bin/nano "file"'
 
       expect(config).to receive(:system).with(command)
-      config.edit
+      config.open_file('file')
     end
 
-    it 'opens configuration file using vi when $EDITOR is not set' do
+    it 'opens file using vi when $EDITOR is not set' do
       config.options['os'] = 'linux'
       ENV['EDITOR'] = nil
-      command = 'vi "' + options + '"'
+      command = 'vi "file"'
 
       expect(config).to receive(:system).with(command)
-      config.edit
+      config.open_file('file')
     end
   end
 end
@@ -70,5 +77,15 @@ describe Budik::Config, '#reset' do
     expect(FileUtils.cmp(options, opts_bk)).to be true
     FileUtils.rm(opts_bk, force: true)
     expect(File.file? opts_bk).to be false
+  end
+end
+
+describe Budik::Config, '#translate' do
+  it 'creates and/or opens a file for translation' do
+    template = './config/templates/lang/en.yml'
+    lang = Dir.home + '/.budik/lang/test_lang.yml'
+    expect(FileUtils).to receive(:cp).with(template, lang)
+    expect(config).to receive(:open_file).with(lang)
+    config.translate('test_lang')
   end
 end
