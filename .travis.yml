@@ -6,8 +6,3 @@ addons:
   apt:
     packages:
       - libav-tools
-script:
-  - 'bundle exec rake features'
-  - 'bundle exec rake spec'
-  - 'bundle exec rake coveralls:push'
-  - 'bundle exec rake rubocop'

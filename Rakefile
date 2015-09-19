@@ -13,4 +13,4 @@ RSpec::Core::RakeTask.new(:spec)
 Coveralls::RakeTask.new
 RuboCop::RakeTask.new
 
-task default: :spec
+task default: [:features, :spec, 'coveralls:push', :rubocop]
