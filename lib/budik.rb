@@ -1,4 +1,12 @@
-#!/usr/bin/env ruby
+# = budik.rb
+# This file contains definitions of the application's command line
+# interface.
+#
+# == Contact
+#
+# Author::  Petr Schmied (mailto:jblack@paworld.eu)
+# Website:: http://www.paworld.eu
+# Date::    September 19, 2015
 
 require 'colorize'
 require 'commander'
@@ -28,13 +36,14 @@ require './lib/budik/sources'
 require './lib/budik/storage'
 require './lib/budik/version'
 
-# 'Budik' is an alarm clock which randomly plays an item from your media
+# 'Budik' is an alarm clock that randomly plays an item from your media
 # collection (local or YouTube).
 module Budik
-  # 'Budik' class is application's main entry point.
+  # 'Budik' class describes application's command line interface.
   class Budik
     include Commander::Methods
 
+    # Loads strings in language specified in application's options.
     def initialize
       @strings = Config.instance.lang.budik
 
@@ -44,9 +53,10 @@ module Budik
       @str_translate = @strings.commands.translate
     end
 
+    # Describes application's command line interface. Runs the application.
     def run
       program :name, 'Budik'
-      program :version, '0.0.1'
+      program :version, Budik::VERSION
       program :description, @strings.description
 
       commands
@@ -58,6 +68,7 @@ module Budik
 
     private
 
+    # List of commands
     def commands
       command_config(@str_config.options)
       command_run(@str_run.options)
@@ -65,6 +76,11 @@ module Budik
       command_translate
     end
 
+    # Describes and runs command 'config'.
+    #
+    # - *Args*:
+    #   - +str_opts+ -> Command options' strings
+    #
     def command_config(str_opts)
       command :config do |c|
         c.syntax = 'budik config [options]'
@@ -75,6 +91,11 @@ module Budik
       end
     end
 
+    # Describes and runs command 'run'.
+    #
+    # - *Args*:
+    #   - +str_opts+ -> Command options' strings
+    #
     def command_run(str_opts)
       command :run do |c|
         c.syntax = 'budik run [options]'
@@ -85,6 +106,12 @@ module Budik
       end
     end
 
+    # Describes options for command 'run'.
+    #
+    # - *Args*:
+    #   - +c+ -> Ruby Commander's object
+    #   - +str_opts+ -> Command options' strings
+    #
     def command_run_options(c, str_opts)
       c.option '-c', '--categories [string]', String, str_opts.categories
       c.option '-d', '--dl-method [string]', String, str_opts.dl_method
@@ -93,6 +120,11 @@ module Budik
       c.option '-r', '--rng [string]', String, str_opts.rng
     end
 
+    # Describes and runs command 'sources'.
+    #
+    # - *Args*:
+    #   - +str_opts+ -> Command options' strings
+    #
     def command_sources(str_opts)
       command :sources do |c|
         c.syntax = 'budik sources [options]'
@@ -105,6 +137,7 @@ module Budik
       end
     end
 
+    # Describes and runs command 'translate'.
     def command_translate
       command :translate do |c|
         c.syntax = 'budik translate [options]'

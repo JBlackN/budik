@@ -1,8 +1,19 @@
+# = config.rb
+# This file contains methods for configuring the application.
+#
+# == Contact
+#
+# Author::  Petr Schmied (mailto:jblack@paworld.eu)
+# Website:: http://www.paworld.eu
+# Date::    September 20, 2015
+
 module Budik
   # 'Config' class loads and manages app configuration.
   class Config
     include Singleton
 
+    # Installs the application if not installed.
+    # Loads options, sources and language.
     def initialize
       install(Dir.home + '/.budik/') unless installed?
 
@@ -11,19 +22,31 @@ module Budik
       @lang = init_lang
     end
 
+    # Sets application's language.
+    #
+    # - *Returns*:
+    #   - R18n::Translation object.
+    #
     def init_lang
       R18n.default_places = Dir.home + '/.budik/lang/'
       R18n.set(@options['lang'])
       R18n.t
     end
 
+    # Language strings, options and sources.
     attr_accessor :lang, :options, :sources
 
+    # Opens options file for editing.
     def edit
       options_path = File.expand_path('~/.budik/options.yml')
       open_file(options_path)
     end
 
+    # Installs the application.
+    #
+    # - *Args*:
+    #   - +dir+ -> Directory to install app's configuration in (String).
+    #
     def install(dir)
       options = './config/templates/options/' + platform?.to_s + '.yml'
       sources = './config/templates/sources/sources.yml'
@@ -35,10 +58,16 @@ module Budik
       FileUtils.cp lang, dir + 'lang/'
     end
 
+    # Checks if the application is already installed.
     def installed?
       File.file?(Dir.home + '/.budik/options.yml')
     end
 
+    # Opens file in default editor depending on platform.
+    #
+    # - *Args*:
+    #   - +file+ -> File to open (String).
+    #
     def open_file(file)
       if @options['os'] == 'windows'
         system('@powershell -Command "' + file + '"')
@@ -48,16 +77,29 @@ module Budik
       end
     end
 
+    # Returns current platform application's running on.
+    #
+    # - *Returns*:
+    #   - :windows, :linux or :rpi
+    #
     def platform?
       os = Sys::Platform.linux? ? :linux : :windows
       rpi?(os) ? :rpi : os
     end
 
+    # Resets app's configuration.
     def reset
       options = './config/templates/options/' + platform?.to_s + '.yml'
       FileUtils.cp(options, Dir.home + '/.budik/options.yml')
     end
 
+    # Checks if application is running on Raspberry Pi.
+    #
+    # - *Args*:
+    #   - +os+ -> Operating system (:windows or :linux)
+    # - *Returns*:
+    #   - true or false
+    #
     def rpi?(os)
       return false unless os == :linux
       cpuinfo = File.read('/proc/cpuinfo')
@@ -67,6 +109,11 @@ module Budik
       false
     end
 
+    # Creates and/or opens language file for translation.
+    #
+    # - *Args*:
+    #   - +lang+ -> Language code (String)
+    #
     def translate(lang)
       template = './config/templates/lang/en.yml'
       new_lang = Dir.home + '/.budik/lang/' + lang + '.yml'

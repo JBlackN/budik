@@ -31,4 +31,5 @@ output:
   number: "Number"
   alarm: "Alarm"
 sources:
+  invalid_format: "Invalid sources format."
   invalid_item: "Item %1 is invalid."

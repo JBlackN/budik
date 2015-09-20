@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['jblack@paworld.eu']
 
   spec.summary       = 'Alarm clock.'
-  spec.description   = 'Alarm clock which randomly plays a song or'\
+  spec.description   = 'Alarm clock that randomly plays a song or'\
     'a video from YouTube or your local collection.'
   spec.homepage      = 'http://jblack.paworld.eu/apps/budik'
   spec.license       = 'MIT'
@@ -46,4 +46,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'cucumber'
   spec.add_development_dependency 'rubocop'
   spec.add_development_dependency 'coveralls'
+  spec.add_development_dependency 'rdoc'
 end
