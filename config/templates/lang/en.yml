@@ -27,9 +27,10 @@ budik:
       summary: "Translate app."
       description: "Opens your language file in your default editor."
 output:
+  alarm: "Alarm"
+  category: "Category"
   date: "DateTime"
   number: "Number"
-  alarm: "Alarm"
 sources:
   invalid_format: "Invalid sources format."
   invalid_item: "Item %1 is invalid."

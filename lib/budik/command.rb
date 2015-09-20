@@ -113,7 +113,7 @@ module Budik
       number = opts.number || rng.generate(sources.count)
       source = sources.get(number)
 
-      puts io.run_info_table(number, source[:name])
+      puts io.run_info_table(source, number)
       source
     end
 

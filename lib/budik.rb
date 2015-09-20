@@ -56,7 +56,7 @@ module Budik
     # Describes application's command line interface. Runs the application.
     def run
       program :name, 'Budik'
-      program :version, Budik::VERSION
+      program :version, VERSION
       program :description, @strings.description
 
       commands

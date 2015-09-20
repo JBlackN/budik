@@ -21,14 +21,15 @@ module Budik
     # to the console.
     #
     # - *Args*:
+    #   - +source+ -> Selected source (Hash).
     #   - +number+ -> Number of selected source (Fixnum).
-    #   - +name+ -> Name of selected source (String).
     #
-    def run_info_table(number, name)
+    def run_info_table(source, number)
       title = 'Budik - ' + DateTime.now.strftime('%d/%m/%Y %H:%M')
 
       rows = []
-      rows << [@strings.alarm, name]
+      rows << [@strings.alarm, source[:name]]
+      rows << [@strings.category, source[:category].to_s]
       rows << [@strings.number, number.to_s]
 
       Terminal::Table.new title: title, rows: rows

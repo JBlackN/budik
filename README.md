@@ -17,6 +17,7 @@ __Warning:__ The application is intended for casual use only. Occurence of bugs 
   * Linux
   * Raspberry Pi
 * Applications:
+  * Ruby (> 1.9.2)
   * VLC media player (Windows, Linux) or omxplayer (Raspberry Pi)
   * FFmpeg or Libav
 * If you need to (un)mount or spin down storage devices, these applications are tested:
@@ -41,7 +42,7 @@ Or install it yourself as:
 
 ## Configuration
 
-When the application is run for the first time, it automatically creates its configuration in `your\_home\_directory/.budik/`. Edit `options.yml` and `sources.yml` as needed.
+When the application is run for the first time, it automatically creates its configuration in `your_home_directory/.budik/`. Edit `options.yml` and `sources.yml` as needed.
 
 For information about correct YAML syntax, look [here](http://learnxinyminutes.com/docs/yaml/).
 
@@ -84,8 +85,8 @@ sources:
   path: "path to sources file (default: ~/.budik/sources.yml)"
 tv:
   available: "self-explainatory (true or false)"
-  use\_if\_no\_video: "self-explainatory (true or false)"
-  wait\_secs\_after\_on: "give TV time to turn on (default: 15)"
+  use_if_no_video: "self-explainatory (true or false)"
+  wait_secs_after_on: "give TV time to turn on (default: 15)"
 ```
 
 ### Sources.yml - explanation
@@ -131,7 +132,7 @@ Linux:
 
 Windows:
 
-    $ budik.exe --help
+    $ budik.bat --help
 
 ### Scheduling
 
@@ -156,7 +157,7 @@ After checking out the repo, run `bin/setup` to install dependencies. Then, run 
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
-## TODO (Ideas)
+## Todo (Ideas)
 
 * [ ] Better sources management (add, remove, etc.)
 * [ ] Scheduling without need to interact with external tools
