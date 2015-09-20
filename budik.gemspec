@@ -47,4 +47,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rubocop'
   spec.add_development_dependency 'coveralls'
   spec.add_development_dependency 'rdoc'
+
+  spec.post_install_message = 'Please make sure VLC/omxplayer and FFmpeg'\
+    "/Libav are installed.\nRun 'budik(.bat) config' to edit app's options"\
+    "as needed.\nRun 'budik(.bat) sources -e' to edit your media sources."
 end
