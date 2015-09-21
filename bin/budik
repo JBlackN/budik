@@ -1,4 +1,4 @@
 #!/usr/bin/env ruby
 
-require './lib/budik'
+require 'budik'
 Budik::Budik.new.run

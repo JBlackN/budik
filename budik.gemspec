@@ -30,7 +30,6 @@ Gem::Specification.new do |spec|
   spec.bindir = 'bin'
   # spec.executables = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.executables << 'budik'
-  spec.executables << 'budik.bat'
   spec.require_paths = ['lib']
 
   spec.add_dependency 'colorize'
