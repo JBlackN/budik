@@ -48,9 +48,9 @@ module Budik
       dir = Dir.home + '/.budik/'
       FileUtils.mkdir_p([dir, dir + 'lang/', dir + 'downloads/'])
 
-      install_options
-      install_sources unless File.file? dir + sources
-      install_lang
+      install_options(dir)
+      install_sources(dir) unless File.file? dir + sources
+      install_lang(dir)
     end
 
     # Creates options file from template.
