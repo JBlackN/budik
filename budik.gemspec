@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'Alarm clock.'
   spec.description   = 'Alarm clock that randomly plays a song or'\
-    'a video from YouTube or your local collection.'
+    ' a video from YouTube or your local collection.'
   spec.homepage      = 'http://jblack.paworld.eu/apps/budik'
   spec.license       = 'MIT'
 
@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
     spec.metadata['allowed_push_host'] = 'https://rubygems.org'
   else
     fail 'RubyGems 2.0 or newer is required to protect'\
-      'against public gem pushes.'
+      ' against public gem pushes.'
   end
 
   spec.files = `git ls-files -z`.split("\x0").reject do |f|

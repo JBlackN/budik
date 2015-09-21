@@ -32,7 +32,7 @@ module Budik
       if source
         IO.instance.storage_download_info(source)
         source[:path].each do |path|
-          download_youtube(YouTubeAddy.extract_video_id(path))
+          download_youtube(YouTubeAddy.extract_video_id(path), path)
         end
       else
         @sources.each { |src| download_sources(src) }
@@ -43,8 +43,9 @@ module Budik
     #
     # - *Args*:
     #   - +id+ -> YouTube video ID (String).
+    #   - +address+ -> YouTube video address (String).
     #
-    def download_youtube(id)
+    def download_youtube(id, address)
       return unless id && !File.file?(@dir + id + '.mp4')
 
       # TODO: Update youtube-dl if fail
@@ -52,7 +53,7 @@ module Budik
       options = { output: @dir + '%(id)s.%(ext)s',
                   format: 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4',
                   playlist: false }
-      YoutubeDL.download '"' + id + '"', options
+      YoutubeDL.download '"' + address + '"', options
     end
 
     # Gets downloaded item's location.

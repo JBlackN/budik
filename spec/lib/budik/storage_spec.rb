@@ -43,16 +43,16 @@ describe Budik::Storage, '#download_sources' do # TODO: rewrite
   end
 end
 
-describe Budik::Sources, '#download_youtube' do
+describe Budik::Storage, '#download_youtube' do
   it 'downloads a video from YouTube' do
     test_address = 'https://www.youtube.com/watch?v=ghxo4OMh1YU'
-    storage.download_youtube(test_address)
+    storage.download_youtube('ghxo4OMh1YU', test_address)
 
     expect(File.file? storage.dir + 'ghxo4OMh1YU.mp4').to eq true
   end
 end
 
-describe Budik::Sources, '#locate_item' do
+describe Budik::Storage, '#locate_item' do
   context 'using YouTube link' do
     it 'returns location of downloaded video' do
       link = 'https://www.youtube.com/watch?v=oHg5SJYRHA0'
@@ -79,7 +79,7 @@ describe Budik::Sources, '#locate_item' do
   end
 end
 
-describe Budik::Sources, '#remove_sources' do
+describe Budik::Storage, '#remove_sources' do
   context 'using specified number' do
     it 'removes downloaded file' do
       storage.method = 'remove'
