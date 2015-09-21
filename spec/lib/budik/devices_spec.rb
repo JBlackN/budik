@@ -157,8 +157,8 @@ describe Budik::Devices, '#tv_on' do
       devices = Budik::Devices.instance
       devices.tv[:on] = false
       devices.tv[:wait_secs_after_on] = 0
-      tv_on_command = 'echo "on 0" | cec-client -s'
-      tv_as_command = 'echo "as" | cec-client -s'
+      tv_on_command = 'echo "on 0" | cec-client -s >/dev/null'
+      tv_as_command = 'echo "as" | cec-client -s >/dev/null'
 
       expect(devices).to receive(:system).with(tv_on_command)
       expect(devices).to receive(:system).with(tv_as_command)
@@ -172,8 +172,8 @@ describe Budik::Devices, '#tv_on' do
       devices = Budik::Devices.instance
       devices.tv[:on] = true
       devices.tv[:wait_secs_after_on] = 0
-      tv_on_command = 'echo "on 0" | cec-client -s'
-      tv_as_command = 'echo "as" | cec-client -s'
+      tv_on_command = 'echo "on 0" | cec-client -s >/dev/null'
+      tv_as_command = 'echo "as" | cec-client -s >/dev/null'
 
       expect(devices).not_to receive(:system).with(tv_on_command)
       expect(devices).not_to receive(:system).with(tv_as_command)
@@ -187,8 +187,8 @@ describe Budik::Devices, '#tv_on' do
       devices = Budik::Devices.instance
       devices.tv[:on] = nil
       devices.tv[:wait_secs_after_on] = 0
-      tv_on_command = 'echo "on 0" | cec-client -s'
-      tv_as_command = 'echo "as" | cec-client -s'
+      tv_on_command = 'echo "on 0" | cec-client -s >/dev/null'
+      tv_as_command = 'echo "as" | cec-client -s >/dev/null'
 
       expect(devices).not_to receive(:system).with(tv_on_command)
       expect(devices).not_to receive(:system).with(tv_as_command)
@@ -203,7 +203,7 @@ describe Budik::Devices, '#tv_off' do
     it 'turns it off' do
       devices = Budik::Devices.instance
       devices.tv[:on] = true
-      tv_off_command = 'echo "standby 0" | cec-client -s'
+      tv_off_command = 'echo "standby 0" | cec-client -s >/dev/null'
 
       expect(devices).to receive(:system).with(tv_off_command)
       devices.tv_off
@@ -215,7 +215,7 @@ describe Budik::Devices, '#tv_off' do
     it "doesn't do anything" do
       devices = Budik::Devices.instance
       devices.tv[:on] = false
-      tv_off_command = 'echo "standby 0" | cec-client -s'
+      tv_off_command = 'echo "standby 0" | cec-client -s >/dev/null'
 
       expect(devices).not_to receive(:system).with(tv_off_command)
       devices.tv_off
@@ -227,7 +227,7 @@ describe Budik::Devices, '#tv_off' do
     it "doesn't do anything" do
       devices = Budik::Devices.instance
       devices.tv[:on] = nil
-      tv_off_command = 'echo "standby 0" | cec-client -s'
+      tv_off_command = 'echo "standby 0" | cec-client -s >/dev/null'
 
       expect(devices).not_to receive(:system).with(tv_off_command)
       devices.tv_off

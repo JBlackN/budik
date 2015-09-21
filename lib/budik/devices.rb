@@ -124,9 +124,9 @@ module Budik
     # If applicable, sets 'on' state to true
     def tv_on
       unless @tv[:on].nil? || @tv[:on] == true
-        system('echo "on 0" | cec-client -s')
+        system('echo "on 0" | cec-client -s >/dev/null')
         sleep(@tv[:wait_secs_after_on]) unless @tv[:wait_secs_after_on].nil?
-        system('echo "as" | cec-client -s')
+        system('echo "as" | cec-client -s >/dev/null')
       end
 
       @tv[:on] = true unless @tv[:on].nil?
@@ -137,7 +137,7 @@ module Budik
     # Doesn't work on my TV
     def tv_off
       unless @tv[:on].nil? || @tv[:on] == false
-        system('echo "standby 0" | cec-client -s')
+        system('echo "standby 0" | cec-client -s >/dev/null')
       end
 
       @tv[:on] = false unless @tv[:on].nil?
