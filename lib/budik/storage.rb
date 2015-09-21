@@ -52,7 +52,7 @@ module Budik
       options = { output: @dir + '%(id)s.%(ext)s',
                   format: 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4',
                   playlist: false }
-      YoutubeDL.download id, options
+      YoutubeDL.download '"' + id + '"', options
     end
 
     # Gets downloaded item's location.
