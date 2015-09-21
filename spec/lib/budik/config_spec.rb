@@ -84,7 +84,7 @@ describe Budik::Config, '#translate' do
   it 'creates and/or opens a file for translation' do
     template = './config/templates/lang/en.yml'
     lang = Dir.home + '/.budik/lang/test_lang.yml'
-    expect(FileUtils).to receive(:cp).with(template, lang)
+    expect(FileUtils).to receive(:cp).with(/#{template}/, lang)
     expect(config).to receive(:open_file).with(lang)
     config.translate('test_lang')
   end

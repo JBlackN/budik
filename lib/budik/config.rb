@@ -15,8 +15,9 @@ module Budik
     # Installs the application if not installed.
     # Loads options, sources and language.
     def initialize
-      install(Dir.home + '/.budik/') unless installed?
+      install unless installed?
 
+      @templates_dir = File.dirname(__FILE__) + '/../../config/templates/'
       @options = YAML.load_file(Dir.home + '/.budik/options.yml')
       @sources = YAML.load_file(File.expand_path(@options['sources']['path']))
       @lang = init_lang
@@ -43,18 +44,42 @@ module Budik
     end
 
     # Installs the application.
+    def install
+      dir = Dir.home + '/.budik/'
+      FileUtils.mkdir_p([dir, dir + 'lang/', dir + 'downloads/'])
+
+      install_options
+      install_sources unless File.file? dir + sources
+      install_lang
+    end
+
+    # Creates options file from template.
     #
     # - *Args*:
-    #   - +dir+ -> Directory to install app's configuration in (String).
+    #   - +dir+ -> Directory containing app's configuration (String).
     #
-    def install(dir)
-      options = './config/templates/options/' + platform?.to_s + '.yml'
-      sources = './config/templates/sources/sources.yml'
-      lang = './config/templates/lang/en.yml'
-
-      FileUtils.mkdir_p([dir, dir + 'lang/', dir + 'downloads/'])
+    def install_options(dir)
+      options = @templates_dir + 'options/' + platform?.to_s + '.yml'
       FileUtils.cp options, dir + 'options.yml'
-      FileUtils.cp sources, dir unless File.file? dir + sources
+    end
+
+    # Creates sources file from template.
+    #
+    # - *Args*:
+    #   - +dir+ -> Directory containing app's configuration (String).
+    #
+    def install_sources(dir)
+      sources = @templates_dir + 'sources/sources.yml'
+      FileUtils.cp sources, dir
+    end
+
+    # Creates default language file from template.
+    #
+    # - *Args*:
+    #   - +dir+ -> Directory containing app's configuration (String).
+    #
+    def install_lang(dir)
+      lang = @templates_dir + 'lang/en.yml'
       FileUtils.cp lang, dir + 'lang/'
     end
 
@@ -89,7 +114,7 @@ module Budik
 
     # Resets app's configuration.
     def reset
-      options = './config/templates/options/' + platform?.to_s + '.yml'
+      options = @templates_dir + 'options/' + platform?.to_s + '.yml'
       FileUtils.cp(options, Dir.home + '/.budik/options.yml')
     end
 
@@ -115,7 +140,7 @@ module Budik
     #   - +lang+ -> Language code (String)
     #
     def translate(lang)
-      template = './config/templates/lang/en.yml'
+      template = @templates_dir + 'lang/en.yml'
       new_lang = Dir.home + '/.budik/lang/' + lang + '.yml'
       FileUtils.cp template, new_lang
       open_file(new_lang)

@@ -52,5 +52,5 @@ Gem::Specification.new do |spec|
 
   spec.post_install_message = 'Please make sure VLC/omxplayer and FFmpeg'\
     "/Libav are installed.\nRun 'budik(.bat) config' to edit app's options"\
-    "as needed.\nRun 'budik(.bat) sources -e' to edit your media sources."
+    " as needed.\nRun 'budik(.bat) sources -e' to edit your media sources."
 end
