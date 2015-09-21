@@ -78,6 +78,7 @@ module Budik
 
       if source
         source[:path].each do |path|
+          next if locate_item(path) == path
           FileUtils.rm File.expand_path(locate_item(path)), force: true
         end
       else
