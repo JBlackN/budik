@@ -29,7 +29,7 @@ describe Budik::Player, '#omx_build_command' do
     omx_options['default_volume'] = -2100
     item = '/tmp/test.mp4'
 
-    cmd = 'omxplayer --vol -2100 /tmp/test.mp4'
+    cmd = 'omxplayer --vol -2100 "/tmp/test.mp4"'
     expect(player.omx_build_command(item)).to eq cmd
   end
 end
@@ -37,7 +37,7 @@ end
 describe Budik::Player, '#omx_volume_control' do
   it 'incrementally increases volume' do
     i = double(puts: nil, close: nil)
-    expect(i).to receive(:puts).exactly(7).times.ordered
+    expect(i).to receive(:print).with('+').exactly(7).times.ordered
     expect(i).to receive(:close).ordered
     player.omx_volume_control(i)
   end

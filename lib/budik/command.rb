@@ -148,6 +148,7 @@ module Budik
       devices.tv_off
       storage.remove_sources(source)
       devices.storage_unmount
+      sleep 5
       devices.storage_sleep
     end
 

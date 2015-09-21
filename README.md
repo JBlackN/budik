@@ -93,6 +93,7 @@ tv:
 
 * Category can't contain both items and subcategories.
 * Every item must have a category (file has to contain at least one category)
+* __Don't__ use backslashes in paths.
 
 ```yaml
 category1:

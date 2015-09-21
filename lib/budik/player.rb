@@ -61,7 +61,7 @@ module Budik
     def omx_build_command(item)
       command = @player_options['path']
       args = '--vol ' + @player_options['default_volume'].to_s
-      command + ' ' + args + ' ' + Storage.instance.locate_item(item)
+      command + ' ' + args + ' "' + Storage.instance.locate_item(item) + '"'
     end
 
     # Fades in volume using omxplayer's volup command.
@@ -72,7 +72,7 @@ module Budik
     def omx_volume_control(i)
       7.times do
         sleep(@player_options['volume_step_secs'])
-        i.puts 'volup'
+        i.print '+'
       end
       i.close
     end
