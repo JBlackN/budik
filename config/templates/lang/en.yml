@@ -1,6 +1,6 @@
 lang: "en" # Do not remove this line.
 budik:
-  description: "Alarm clock which randomly plays a song or a video from YouTube or your local collection."
+  description: "Alarm clock that randomly plays a song or a video from YouTube or your local collection."
   commands:
     config:
       summary: "Edit program configuration."

@@ -38,7 +38,7 @@ module Budik
       part_sub = { '$partition': @storage[:partition] }
       dev_sub = { '$device': @storage[:device] }
 
-      storage_parse_cmd('mount', options['mount'], part_sub, mount: false)
+      storage_parse_cmd('mount', options['mount'], part_sub, mounted: false)
       storage_parse_cmd('unmount', options['unmount'], part_sub, unmount: true)
       storage_parse_cmd('sleep', options['sleep'], dev_sub, awake: false)
     end

@@ -23,17 +23,17 @@ rng:
   method: hwrng
   random.org:
     apikey: ""
-sources: 
-  download: 
+sources:
+  download:
     device: /dev/sda
     dir: /mnt/.budik/downloads/
     method: remove
     mount: "udisksctl mount -b $partition"
     partition: /dev/sda1
-    sleep: "sudo hdparm -y /dev/sda1"
+    sleep: ""
     unmount: "udisksctl unmount -b $partition"
   path: ~/.budik/sources.yml
-tv: 
+tv:
   available: true
   use_if_no_video: true
   wait_secs_after_on: 15
