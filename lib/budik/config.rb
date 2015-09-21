@@ -18,6 +18,7 @@ module Budik
       install unless installed?
 
       @templates_dir = File.dirname(__FILE__) + '/../../config/templates/'
+      fail @templates_dir
       @options = YAML.load_file(Dir.home + '/.budik/options.yml')
       @sources = YAML.load_file(File.expand_path(@options['sources']['path']))
       @lang = init_lang
