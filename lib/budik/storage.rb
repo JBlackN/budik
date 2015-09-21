@@ -30,6 +30,7 @@ module Budik
     #
     def download_sources(source = nil)
       if source
+        IO.instance.storage_download_info(source)
         source[:path].each do |path|
           download_youtube(YouTubeAddy.extract_video_id(path))
         end

@@ -18,8 +18,8 @@ __Warning:__ The application is intended for casual use only. Occurence of bugs 
   * Raspberry Pi
 * Applications:
   * Ruby (> 1.9.2)
-  * VLC media player (Windows, Linux) or omxplayer (Raspberry Pi)
-  * FFmpeg or Libav
+  * __VLC media player__ (Windows, Linux) or __omxplayer__ (Raspberry Pi)
+  * __FFmpeg__ or __Libav__
 * If you need to (un)mount or spin down storage devices, these applications are tested:
   * Udisks2
   * Hdparm (read its documentation and take extra care)

@@ -45,5 +45,14 @@ module Budik
         puts '[' + index.to_s.light_white + '] ' + source[:name].yellow
       end
     end
+
+    # Outputs information about source being downloaded.
+    #
+    # - *Args*:
+    #   - +source+ -> Source being downloaded (Hash).
+    #
+    def storage_download_info(source)
+      puts @strings.downloading + source[:name]
+    end
   end
 end

@@ -30,6 +30,7 @@ output:
   alarm: "Alarm"
   category: "Category"
   date: "DateTime"
+  downloading: "Downloading: "
   number: "Number"
 sources:
   invalid_format: "Invalid sources format."
