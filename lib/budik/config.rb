@@ -49,7 +49,7 @@ module Budik
       FileUtils.mkdir_p([dir, dir + 'lang/', dir + 'downloads/'])
 
       install_options(dir)
-      install_sources(dir) unless File.file? dir + sources
+      install_sources(dir)
       install_lang(dir)
     end
 
@@ -70,7 +70,7 @@ module Budik
     #
     def install_sources(dir)
       sources = @templates_dir + 'sources/sources.yml'
-      FileUtils.cp sources, dir
+      FileUtils.cp sources, dir unless File.file? dir + sources
     end
 
     # Creates default language file from template.
