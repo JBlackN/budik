@@ -15,10 +15,9 @@ module Budik
     # Installs the application if not installed.
     # Loads options, sources and language.
     def initialize
+      @templates_dir = File.dirname(__FILE__) + '/../../config/templates/'
       install unless installed?
 
-      @templates_dir = File.dirname(__FILE__) + '/../../config/templates/'
-      fail @templates_dir
       @options = YAML.load_file(Dir.home + '/.budik/options.yml')
       @sources = YAML.load_file(File.expand_path(@options['sources']['path']))
       @lang = init_lang
