@@ -11,5 +11,5 @@
 # collection (local or YouTube).
 module Budik
   # Application's version
-  VERSION = '0.9.9'
+  VERSION = '1.0.0'
 end
